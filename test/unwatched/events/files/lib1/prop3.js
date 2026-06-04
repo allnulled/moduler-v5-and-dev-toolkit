@@ -1,0 +1,1 @@
+static prop3 = 3

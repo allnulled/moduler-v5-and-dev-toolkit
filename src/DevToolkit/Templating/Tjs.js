@@ -1,0 +1,1 @@
+static Tjs = require("./tjs.js");

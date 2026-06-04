@@ -1,0 +1,1 @@
+return $dictionary.mean(_ => 77);

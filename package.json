@@ -1,0 +1,22 @@
+{
+  "name": "moduler-v5-and-dev-toolkit",
+  "version": "1.0.0",
+  "main": "dist/moduler-v5/moduler-v5.dist.js",
+  "scripts": {
+    "dev": "bash dev/dev.sh",
+    "build": "node dev/build.js",
+    "test": "node test/test.js"
+  },
+  "keywords": [],
+  "author": "allnulled",
+  "license": "WTFPL",
+  "description": "ModulerV5 es un modulador en runtime de JS y DevToolkit es un kit de herramientas de desarrollo para JS.",
+  "devDependencies": {
+    "chokidar": "^5.0.0",
+    "ejs": "^5.0.2",
+    "express": "^5.2.1",
+    "js-beautify": "^1.15.4",
+    "picomatch": "^4.0.4",
+    "socket.io": "^4.8.3"
+  }
+}

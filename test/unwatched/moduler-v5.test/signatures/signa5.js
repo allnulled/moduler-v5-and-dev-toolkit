@@ -1,0 +1,1 @@
+return $dictionary.mean("./signa5-data.js");

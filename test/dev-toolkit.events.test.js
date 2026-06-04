@@ -1,0 +1,26 @@
+module.exports = async function ({ DevToolkit, devToolkit, startTime, titleColumns }) {
+  const { assert, assertFileExists, assertDirectoryExists, assertFileContents, assertFileMissing, assertDirectoryMissing } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "Events".padEnd(titleColumns) });
+  assert(1, "Starting DevToolkit.Events test");
+  assert(typeof DevToolkit.Events === "function", "Can find DevToolkit.Events");
+  await DevToolkit.FileSystem.deleteDirectory(devToolkit.fullpathOf("events/files"), { inTry: true });
+  await DevToolkit.FileSystem.writeDirectory(devToolkit.fullpathOf("events/files"));
+  await DevToolkit.FileSystem.writeDirectory(devToolkit.fullpathOf("events/files/lib1"));
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/prop1.js"), `static prop1 = 1`);
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/prop2.js"), `static prop2 = 2`);
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/prop3.js"), `static prop3 = 3`);
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/on-touch.js"), `module.exports = function(file) {\n  require("fs").writeFileSync(__dirname + "/on-touch-event.txt", "happened", "utf8");\n};`);
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/on-test.js"), `module.exports = function(file) {\n  require("fs").writeFileSync(__dirname + "/on-test-event.txt", "happened", "utf8");\n};`);
+  await DevToolkit.FileSystem.writeFile(devToolkit.fullpathOf("events/files/lib1/lib1.entry.js"), `module.exports = class {\n  /*<$=await include("./prop1.js")$>*/;\n  /*<$=await include("./prop2.js")$>*/;\n  /*<$=await include("./prop3.js")$>*/;\n}`);
+  await assertFileMissing(devToolkit.fullpathOf("events/files/lib1/on-touch-event.txt"), "Can start clean without a on-touch-event.txt");
+  await assertFileMissing(devToolkit.fullpathOf("events/files/lib1/on-test-event.txt"), "Can start clean without a on-test-event.txt");
+  await assertFileMissing(devToolkit.fullpathOf("events/files/lib1/lib1.dist.js"), "Can start clean without a lib1.dist.js");
+  await devToolkit.events.touch(devToolkit.fullpathOf("events/files/lib1/prop1.js"));
+  await assertFileContents(devToolkit.fullpathOf("events/files/lib1/on-test-event.txt"), "happened", "Can propagate «on-test.js» on simple structure");
+  await assertFileContents(devToolkit.fullpathOf("events/files/lib1/on-touch-event.txt"), "happened", "Can propagate «on-touch.js» on simple structure");
+  await assertFileContents(devToolkit.fullpathOf("events/files/lib1/lib1.dist.js"), "module.exports = class {\n  static prop1 = 1;\n  static prop2 = 2;\n  static prop3 = 3;\n}", "Can compile a .entry.js file when found");
+  const lib1 = require(devToolkit.fullpathOf("events/files/lib1/lib1.dist.js"));
+  assert(typeof lib1 === "function", "Can compile to *.dist.js by tjs when *.entry.js is found (point 1)");
+  assert(typeof lib1.prop1 === "number", "Can compile to *.dist.js by tjs when *.entry.js is found (point 2)");
+  assert(typeof lib1.prop2 === "number", "Can compile to *.dist.js by tjs when *.entry.js is found (point 3)");
+  assert(typeof lib1.prop3 === "number", "Can compile to *.dist.js by tjs when *.entry.js is found (point 4)");
+};

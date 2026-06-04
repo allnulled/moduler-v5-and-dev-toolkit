@@ -1,0 +1,7 @@
+- [ ] Colores en consola con `DevToolkit.CommandLine.Colors.style`
+- [ ] Autorrefrescador con `DevToolkit.FileWatcher.start`
+- [ ] Semáforos con `DevToolkit.Semaphore`
+- [ ] Plantillas de código con `DevToolkit.Templating.Tjs`
+- [ ] Trazador con `DevToolkit.Tracer`
+- [ ] Eventos de onTouch y entries con `DevToolkit.Events`
+- [ ] Asertador con `DevToolkit.Testing.Asserter.createAssert`

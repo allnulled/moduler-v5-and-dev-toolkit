@@ -1,0 +1,1 @@
+static baseProject = /*<$=await tjs.readFile(__dirname + "/blank-project/blank-project.json")$>*/0;
