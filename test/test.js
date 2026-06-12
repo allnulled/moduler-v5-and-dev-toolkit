@@ -12,7 +12,7 @@ if(0) tests.push(`${__dirname}/moduler-v5.css-dependency.test.js`);
 
 if(0) tests.push(`${__dirname}/dev-toolkit.testing.test.js`);
 if(0) tests.push(`${__dirname}/dev-toolkit.templating.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.documentator.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.documentator.test.js`);
 if(1) tests.push(`${__dirname}/dev-toolkit.cli-tools.test.js`);
 if(1) tests.push(`${__dirname}/dev-toolkit.cli-api.test.js`);
 if(0) tests.push(`${__dirname}/dev-toolkit.tracer.test.js`);

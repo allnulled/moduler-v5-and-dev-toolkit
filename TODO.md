@@ -8,6 +8,12 @@
     🟢 el dev-toolkit.dist.js se ignora en la jsonificación inicial
     🟢 el dev-toolkit.dist.js se inyecta en el último momento
     🟢 el dev-toolkit.dist.js no se hace grande infinito y consigue replicar todo el proyecto
+🟢 Documentador
+  🟢 Primera versión con lo normal de javadoc
+    🟢 Saca un JSON
+    🟢 Separa por ficheros/tags/menciones del mismo tag
+      🟢 Separa si un tag es usado múltiples veces
+    🟢 Junta las líneas pero respetando el salto de línea
 🟡 El CommandLine compartirá algunos métodos con comandos del cli:
   🟡 buildJs: dev build js --file f.js
   🟡 buildCss: dev build css --file f.css
@@ -15,14 +21,6 @@
   🟡 testJs: dev test js --file f.js
   🟡 loop: dev loop
   🟡 up: dev up --message whatever (git push)
-🟡 Documentador
-  🟡 tiene que aceptar las siguientes sintaxis:
-    🟡 // @docs.set: {"section":["watever","enever","yulstei"],"order":10}
-    🟡 // @docs.line
-    🟡 // @docs.text.in
-    🟡 // @docs.text.out
-    🟡 // @docs.code.in
-    🟡 // @docs.code.out
 ⛔️ Aclarar los comandos iniciales de cualquier proyecto
   ⛔️ Esto va en el moduler-v5
   ⛔️ Pero afecta a este proyecto por el baseProject del CommandLine

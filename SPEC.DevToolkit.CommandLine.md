@@ -2,6 +2,17 @@
 
 La API de `DevToolkit.CommandLine` se encarga del soporte de las herramientas más básicas entorno a la línea de comandos de DevToolkit.
 
+## Índice
+
+- [La especificación de la API de CommandLine de DevToolkit](#la-especificación-de-la-api-de-commandline-de-devtoolkit)
+  - [Índice](#índice)
+  - [Cláusulas](#cláusulas)
+    - [C.1. La API de colores de consola](#c1-la-api-de-colores-de-consola)
+    - [C.2. Método printError](#c2-método-printerror)
+    - [C.3. Método tool](#c3-método-tool)
+    - [C.4. Métodos de herramientas de desarrollo](#c4-métodos-de-herramientas-de-desarrollo)
+    - [C.5. La variable baseProject](#c5-la-variable-baseproject)
+
 ## Cláusulas
 
 Las cláusulas de esta API.

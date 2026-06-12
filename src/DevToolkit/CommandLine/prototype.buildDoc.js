@@ -1,3 +1,3 @@
-buildTs() {
+buildDoc() {
   
 }
