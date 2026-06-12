@@ -8,7 +8,7 @@
     🟢 el dev-toolkit.dist.js se ignora en la jsonificación inicial
     🟢 el dev-toolkit.dist.js se inyecta en el último momento
     🟢 el dev-toolkit.dist.js no se hace grande infinito y consigue replicar todo el proyecto
-🟢 Documentador
+🟢 Documentador 
   🟢 Primera versión con lo normal de javadoc
     🟢 Saca un JSON
     🟢 Separa por ficheros/tags/menciones del mismo tag
