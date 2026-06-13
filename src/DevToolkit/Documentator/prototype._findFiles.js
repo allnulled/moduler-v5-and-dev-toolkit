@@ -1,4 +1,5 @@
 _findFiles(globPattern = "**/*.js", options = {}) {
+  this.trace("_findFiles", arguments);
   return require("glob").glob(globPattern, {
     // 1. Changeable options:
     cwd: this.toolkit.basedir,

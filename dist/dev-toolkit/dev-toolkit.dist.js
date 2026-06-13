@@ -45,7 +45,7 @@
   };
   static Documentator = class Documentator {
    constructor(toolkit) {
-    this.trace = Tracer.createTracer("DevToolkit.Events", "constructor");
+    this.trace = Tracer.createTracer("DevToolkit.Documentator", "constructor", false);
     this.toolkit = toolkit;
    }
    static symbols = {
@@ -64,6 +64,7 @@
     REGEX_JAVADOC_TAG: new RegExp("^(\@((?! |\\:).)+)", "g"),
    }
    _findFiles(globPattern = "**/*.js", options = {}) {
+    this.trace("_findFiles", arguments);
     return require("glob").glob(globPattern, {
      // 1. Changeable options:
      cwd: this.toolkit.basedir,
@@ -77,21 +78,8 @@
      ],
     });
    }
-   async extractJavadocCommentsFromDirectory(dir = this.toolkit.basedir) {
-    this.trace("extractJavadocCommentsFromDirectory", arguments);
-    const inputFiles = await this._findFiles(require("path").resolve(dir, "**/*.js"));
-    const allJavadocComments = {};
-    for (let index = 0; index < inputFiles.length; index++) {
-     const file = inputFiles[index];
-     const content = await require("fs").promises.readFile(file, "utf8");
-     const comments = this.extractJavadocCommentsFromString(content);
-     if (comments.length) {
-      allJavadocComments[file] = comments;
-     }
-    }
-    return allJavadocComments;
-   }
-   extractJavadocCommentsFromString(text) {
+   _extractJavadocCommentsFromString(text) {
+    this.trace("_extractJavadocCommentsFromString", arguments);
     const matches = text.match(this.constructor.symbols.REGEX_JAVADOC_COMMENT);
     if (!matches) return [];
     const javadocComments = [];
@@ -135,6 +123,50 @@
      javadocComments.push(javadocComment);
     }
     return javadocComments;
+   }
+   async extractJavadocCommentsFromDirectory(dir = this.toolkit.basedir) {
+    this.trace("extractJavadocCommentsFromDirectory", arguments);
+    const inputFiles = await this._findFiles(require("path").resolve(dir, "**/*.js"));
+    const allJavadocComments = {};
+    for (let index = 0; index < inputFiles.length; index++) {
+     const file = inputFiles[index];
+     const content = await require("fs").promises.readFile(file, "utf8");
+     const comments = this._extractJavadocCommentsFromString(content);
+     if (comments.length) {
+      allJavadocComments[file.replace(this.toolkit.basedir + "/", "{@root}/")] = comments;
+     }
+    }
+    return allJavadocComments;
+   }
+   async extractJavadocTextFromDirectory(dir = this.toolkit.basedir, options = {}) {
+    this.trace("extractJavadocTextFromDirectory", arguments);
+    const allJavadocCommentsPerFile = await this.extractJavadocCommentsFromDirectory(dir);
+    const hideFiles = ("hideFiles" in options) ? options.hideFiles : true;
+    let outputMd = "";
+    for (let file in allJavadocCommentsPerFile) {
+     outputMd += `----\n\n**${file}**\n\n`;
+     const commentsInFile = allJavadocCommentsPerFile[file];
+     for (let indexComment = 0; indexComment < commentsInFile.length; indexComment++) {
+      outputMd += `----\n\n`;
+      const comment = commentsInFile[indexComment];
+      for (let tagName in comment) {
+       outputMd += `- **${tagName}:**`;
+       const tagUnits = comment[tagName];
+       if (tagUnits.length === 0) {
+        outputMd += "\n";
+       } else if (tagUnits.length === 1) {
+        outputMd += ` ${tagUnits[0]}\n`;
+       } else {
+        for (let indexTagUnit = 0; indexTagUnit < tagUnits.length; indexTagUnit++) {
+         const tagUnit = tagUnits[indexTagUnit];
+         outputMd += `\n   - ${tagUnit.trim().replace(/(\r?\n)+/g, "\n      - ")}`;
+        }
+        outputMd += `\n`;
+       }
+      }
+     }
+    }
+    return outputMd;
    }
   };
   static CommandLine = class CommandLine {
@@ -289,8 +321,34 @@
     static defaultOnError(message) {
      throw new this.AssertionError(message);
     }
+    static isDeepEqual(a, b) {
+     // @BY-CHATGPT
+     // @NOT-TESTED
+     if (a === b) return true;
+     if (a === null || b === null) return false;
+     if (typeof a !== typeof b) return false;
+     if (typeof a !== "object") return false;
+     const aIsArray = Array.isArray(a);
+     const bIsArray = Array.isArray(b);
+     if (aIsArray !== bIsArray) return false;
+     if (aIsArray) {
+      if (a.length !== b.length) return false;
+      for (let i = 0; i < a.length; i++) {
+       if (!this.isDeepEqual(a[i], b[i])) return false;
+      }
+      return true;
+     }
+     const aKeys = Object.keys(a);
+     const bKeys = Object.keys(b);
+     if (aKeys.length !== bKeys.length) return false;
+     for (const key of aKeys) {
+      if (!Object.hasOwn(b, key)) return false;
+      if (!this.isDeepEqual(a[key], b[key])) return false;
+     }
+     return true;
+    }
     static createAssert(onSuccess = this.defaultOnSuccess, onError = this.defaultOnError, specificOutputs = {}) {
-     const assert = function(condition, message) {
+     const assert = function(condition, message = "no assertion message provided") {
       if (["string", "number"].includes(typeof condition) && condition in specificOutputs) {
        return specificOutputs[condition](message);
       } else if (condition) {
@@ -326,6 +384,10 @@
        return DevToolkit.FileSystem.readDirectory(dir, {
         inTry: true
        }).then(out => assert(typeof out !== "object", message));
+      },
+      // Aserciones especiales:
+      assertDeepEqual: (a, b, message) => {
+       return assert(this.isDeepEqual(a, b), message);
       },
      };
     }

@@ -1,3 +1,23 @@
+🟩 Acabado en: 13/06/2026 17:34pm
+  🟩 Documentador 
+    🟩 Primera versión con lo normal de javadoc
+      🟩 Saca un JSON
+      🟩 Separa por ficheros/tags/menciones del mismo tag
+        🟩 Separa si un tag es usado múltiples veces
+      🟩 Junta las líneas pero respetando el salto de línea
+    🟩 Segunda versión
+      🟩 Saca el JSON
+      🟩 Saca el Markdown
+🟩 Puede crear proyectos desde 0 
+  🟩 Con DevToolkit.CommandLine.createProject
+  🟩 Se basa en moduler-v5-and-dev-toolkit-starter
+  🟩 Se utiliza un JSON intermedio para no depender de directorios
+  🟩 El JSON se está exportando desde moduler-v5-starter a aquí
+🟩 Que se pueda replicar un proyecto en blanco con createProject
+  🟩 Que no incurra en expansión infinita
+    🟩 el dev-toolkit.dist.js se ignora en la jsonificación inicial
+    🟩 el dev-toolkit.dist.js se inyecta en el último momento
+    🟩 el dev-toolkit.dist.js no se hace grande infinito y consigue replicar todo el proyecto
 🟩 Acabado en: 16:42pm 03/06/2026
    🟩 «dev»: the devtoolkit cli
       🟩 await devToolkit.cli.tool(["dev", "tool", "touch", "--file", "some/file.js"])

@@ -1,5 +1,5 @@
 static createAssert(onSuccess = this.defaultOnSuccess, onError = this.defaultOnError, specificOutputs = {}) {
-  const assert = function (condition, message) {
+  const assert = function (condition, message = "no assertion message provided") {
     if (["string", "number"].includes(typeof condition) && condition in specificOutputs) {
       return specificOutputs[condition](message);
     } else if (condition) {
@@ -25,6 +25,10 @@ static createAssert(onSuccess = this.defaultOnSuccess, onError = this.defaultOnE
     },
     assertDirectoryMissing: function (dir, message) {
       return DevToolkit.FileSystem.readDirectory(dir, { inTry: true }).then(out => assert(typeof out !== "object", message));
+    },
+    // Aserciones especiales:
+    assertDeepEqual: (a, b, message) => {
+      return assert(this.isDeepEqual(a, b), message);
     },
   };
 }

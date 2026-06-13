@@ -18,6 +18,7 @@ pwd > cwd.txt
     -i "**/dist-instrumented/**/*" \
     -i "**/unwatched/file-watcher/**/*" \
     -i "**/unwatched/devtoolkit-cli.test/**/*" \
+    -i "**/unwatched/devtoolkit-documentator.test/**/*" \
     -i "**/unwatched/events/**/*" \
     -i "**/semaphore.*" \
     -i "**/blank-project/**/*" \

@@ -31,6 +31,7 @@ Las especificaciones son documentos de apoyo que formalizan y explican cómo usa
 - [ModulerV5+CssModuler Spec.](./SPEC.ModulerV5.CssModuler.md)
 - [DevToolkit Spec.](./SPEC.DevToolkit.md)
 - [DevToolkit+CommandLine Spec.](./SPEC.DevToolkit.CommandLine.md)
+- [DevToolkit+Documentator Spec.](./SPEC.DevToolkit.Documentator.md)
 
 ## API
 
