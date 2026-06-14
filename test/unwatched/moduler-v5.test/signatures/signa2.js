@@ -1,1 +1,0 @@
-return $dictionary.define([() => 25], result => result * 2);

@@ -4,28 +4,27 @@ const tests = [];
 
 
 
-if(0) tests.push(`${__dirname}/moduler-v4.test.js`);
-if(0) tests.push(`${__dirname}/moduler-v5.signatures.test.js`);
-if(0) tests.push(`${__dirname}/moduler-v5.paths.test.js`);
-if(0) tests.push(`${__dirname}/moduler-v5.css-output.test.js`);
-if(0) tests.push(`${__dirname}/moduler-v5.css-dependency.test.js`);
+// if(1) tests.push(`${__dirname}/moduler-v4.test.js`);
+if(1) tests.push(`${__dirname}/moduler-v5.signatures.test.js`);
+if(1) tests.push(`${__dirname}/moduler-v5.paths.test.js`);
+if(1) tests.push(`${__dirname}/moduler-v5.css-output.test.js`);
+if(1) tests.push(`${__dirname}/moduler-v5.css-dependency.test.js`);
 
-if(0) tests.push(`${__dirname}/dev-toolkit.testing.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.templating.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.testing.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.templating.test.js`);
 if(1) tests.push(`${__dirname}/dev-toolkit.documentator.test.js`);
 if(1) tests.push(`${__dirname}/dev-toolkit.cli-tools.test.js`);
 if(1) tests.push(`${__dirname}/dev-toolkit.cli-api.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.tracer.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.semaphores.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.events.test.js`);
-if(0) tests.push(`${__dirname}/dev-toolkit.file-watcher.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.tracer.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.semaphores.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.events.test.js`);
+if(1) tests.push(`${__dirname}/dev-toolkit.file-watcher.test.js`);
 
 
 
 const main = async function () {
   const DevToolkit = require(`${__dirname}/../dist/dev-toolkit/dev-toolkit.dist.js`);
-  const devToolkit = new DevToolkit(`${__dirname}/unwatched`);
-  const ModulerV4 = require(`${__dirname}/../dist/moduler-v4/moduler-v4.dist.js`);
+  const devToolkit = new DevToolkit(`${__dirname}/tests-assets`);
   const ModulerV5 = require(`${__dirname}/../dist/moduler-v5/moduler-v5.dist.js`);
   const hasColors = (() => {try {DevToolkit.CommandLine.Colors.style;return true;} catch(error) {return false;}})();
   const results = { output: [] };
@@ -34,7 +33,7 @@ const main = async function () {
   for(let index=0; index<tests.length; index++) {
     const file = tests[index];
     try {
-      const output = await require(file)({ DevToolkit, devToolkit, ModulerV4, ModulerV5, startTime, titleColumns: 20 });
+      const output = await require(file)({ DevToolkit, devToolkit, ModulerV5, startTime, titleColumns: 20 });
       results.output.push({ index, file, success: true , output });
     } catch (error) {
       results.output.push({ index, file, success: false, error });      

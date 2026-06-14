@@ -1,3 +1,9 @@
+/**
+ * @name DevToolkit.CommandLine.prototype.createProject
+ * @type class method
+ * @returns true - Si todo ha ido bien.
+ * @description Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
+ */
 async createProject(targetDirectory) {
   const fs = require("fs");
   const targetFullpath = this.toolkit.fullpathOf(targetDirectory);

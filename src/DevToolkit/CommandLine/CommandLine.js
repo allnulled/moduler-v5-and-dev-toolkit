@@ -1,5 +1,10 @@
-class CommandLine {
-  static Colors = /*<$=await include("./Colors.js")$>*/0;
+/**
+ * @name DevToolkit.CommandLine
+ * @type class
+ * @description Clase con utilidades para la interfaz de línea de comandos de DevToolkit
+ */
+static CommandLine = class CommandLine {
+  /*<$=await include("./Colors.js")$>*/0;
   /*<$=await include("./printError.js")$>*/0;
   /*<$=await include("./constructor.js")$>*/0;
   /*<$=await include("./baseProject.js")$>*/0;

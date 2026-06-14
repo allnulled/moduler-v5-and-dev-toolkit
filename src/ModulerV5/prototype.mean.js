@@ -1,5 +1,5 @@
 mean(...args) {
-  this.trace("mean", arguments);
+  
   let id = undefined;
   let dependencies = [];
   let callback = undefined;

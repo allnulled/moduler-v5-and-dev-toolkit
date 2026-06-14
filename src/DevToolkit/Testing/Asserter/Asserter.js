@@ -1,4 +1,9 @@
-class Asserter {
+/**
+ * @name DevToolkit.Testing.Asserter
+ * @type class
+ * @description Clase con utilidades para aserciones.
+ */
+static Asserter = class Asserter {
   /*<$=await include("./AssertionError.js")$>*/;
   /*<$=await include("./defaultOnSuccess.js")$>*/
   /*<$=await include("./defaultOnError.js")$>*/

@@ -6,7 +6,6 @@
   
   const ModulerV5 = class {
     static CssModuler = /*<$=await include("./CssModuler/CssModuler.js")$>*/0;
-    static InjectionParser = /*<$=await include("./InjectionParser/InjectionParser.js")$>*/0;
     /*<$=await include("./create.js")$>*/
     /*<$=await include("./constructor.js")$>*/
     /*<$=await include("./inspectToString.js")$>*/

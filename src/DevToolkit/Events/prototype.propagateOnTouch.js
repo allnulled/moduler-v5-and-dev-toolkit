@@ -1,5 +1,10 @@
+/**
+ * @name DevToolkit.Events.prototype.propagateOnTouch
+ * @parameter file:String - Fichero del cual se quiere propagar el touch.
+ * @returns Promise<void> - No devuelve nada actualmente.
+ * @description Realiza la propagación de tipo Touch para un fichero dado.
+ */
 async propagateOnTouch(file) {
-  this.trace("prototype.propagateOnTouch", arguments);
   Propagate_on_touch: {
     const path = require("path");
     const subpath = this.toolkit.subpathOf(file);

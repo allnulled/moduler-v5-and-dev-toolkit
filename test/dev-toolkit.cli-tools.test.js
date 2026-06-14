@@ -4,7 +4,7 @@ module.exports = async function (...args) {
   assert(1, "DevToolkit/CommandLine/tools");
   const memorize = {};
   Proyecto_1: {
-    const targetDirectory = __dirname + "/unwatched/devtoolkit-cli.test/example-1";
+    const targetDirectory = __dirname + "/tests-assets/devtoolkit-cli.test/example-1";
     const packageJsonPath = `${targetDirectory}/package.json`;
     Empezar_un_nuevo_proyecto: {
       await DevToolkit.FileSystem.emptyDirectory(targetDirectory);
@@ -26,7 +26,7 @@ module.exports = async function (...args) {
     }
   }
   Proyecto_2: {
-    const targetDirectory = __dirname + "/unwatched/devtoolkit-cli.test/example-2";
+    const targetDirectory = __dirname + "/tests-assets/devtoolkit-cli.test/example-2";
     const packageJsonPath = `${targetDirectory}/package.json`;
     Empezar_un_nuevo_proyecto: {
       await DevToolkit.FileSystem.emptyDirectory(targetDirectory);
@@ -41,7 +41,7 @@ module.exports = async function (...args) {
     }
   }
   assert(memorize.size1 === memorize.size2, "Can inject «dev-toolkit.dist.js» without making it grow infinite")
-  await DevToolkit.FileSystem.writeFile(__dirname + "/unwatched/devtoolkit-cli.test/example-1/empty.txt", "");
-  await DevToolkit.FileSystem.writeFile(__dirname + "/unwatched/devtoolkit-cli.test/example-2/empty.txt", "");
-  await DevToolkit.FileSystem.writeFile(__dirname + "/unwatched/devtoolkit-cli.test/example-3/empty.txt", "");
+  await DevToolkit.FileSystem.writeFile(__dirname + "/tests-assets/devtoolkit-cli.test/example-1/empty.txt", "");
+  await DevToolkit.FileSystem.writeFile(__dirname + "/tests-assets/devtoolkit-cli.test/example-2/empty.txt", "");
+  await DevToolkit.FileSystem.writeFile(__dirname + "/tests-assets/devtoolkit-cli.test/example-3/empty.txt", "");
 };

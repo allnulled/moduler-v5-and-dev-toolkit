@@ -23,13 +23,13 @@ module.exports = async function ({ DevToolkit, devToolkit, startTime, titleColum
     const { setTimeout } = require("timers/promises");
     const { FileWatcher } = DevToolkit;
     const filewatcher = FileWatcher.start({
-      watch: [__dirname + "/unwatched"],
+      watch: [__dirname + "/tests-assets"],
       port: 3004,
       extensions: ["txt"],
       message: "Este filewatcher es del test"
     });
     await setTimeout(100);
-    await fs.promises.writeFile(__dirname + "/unwatched/test.txt", "ok", "utf8");
+    await fs.promises.writeFile(__dirname + "/tests-assets/test.txt", "ok", "utf8");
     await setTimeout(0);
     filewatcher.server.watcher.close();
     filewatcher.server.server.close();

@@ -1,3 +1,13 @@
+🟩 Acabado en: 14/06/2026 18:43pm
+  🟩 Meter documentación en el pipebuilder
+    🟩 Asíncronamente, que no demore los tests por ello
+🟩 Acabado en: 14/06/2026 13:16pm
+  🟩 (ModulerV5) Pasar las dependencias inyectadas en el mismo argumento, en forma de array
+    🟩 Para siempre tener los otros parámetros en la misma posición
+    🟩 Y no tener que conocer/extraer todos los inyectados para saber dónde se reciben los otros
+  🟩 Quitar el InjectionParser
+    🟩 Si se puede hacer con 1 sintaxis, mejor no liar el código con código no-código
+  🟩 Quitar el ModulerV4 que no lo queremos para nada ya
 🟩 Acabado en: 13/06/2026 17:34pm
   🟩 Documentador 
     🟩 Primera versión con lo normal de javadoc
@@ -52,7 +62,7 @@
       🟩 test en moduler-v5.css-dependency.test.js
    🟩 tests
 🟩 Iniciado en: 11:00am 30/05/2026
-  🟩 Inyectar `$dictionary` que tenga el `basedir` del fichero
+  🟩 Inyectar `LocalDictionary` que tenga el `basedir` del fichero
     🟩 Que pueda usarse para llamar al `define` y al `mean` usando rutas relativas al fichero
     🟩 Usando `normalizationOf`
     🟩 Dejar unos tests

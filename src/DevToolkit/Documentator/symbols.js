@@ -1,3 +1,8 @@
+/**
+ * @name DevToolkit.Documentator.symbols
+ * @type Object
+ * @description Tiene varias expresiones regulares que interesan para capturar y limpiar los comentarios javadoc.
+ */
 static symbols = {
   REGEX_JAVADOC_COMMENT: new RegExp(""
     + "(\\/\\*\\*)(\\n)"

@@ -54,7 +54,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     assert(modulerSub2.fullpathOf("point1.2.js") === devToolkit.fullpathOf("moduler-v5.test/pathmodes/demo1/part1/point1.2.js"), "Can create modulers that change its basedir with cloneForFile (point 2)");
     assert(modulerSub3.fullpathOf("point2.2.js") === devToolkit.fullpathOf("moduler-v5.test/pathmodes/demo1/part2/point2.2.js"), "Can create modulers that change its basedir with cloneForDirectory (point 3)");
   }
-  Uso_de_rutas_relativas_por_inyeccion_fantasma_$dictionary: {
+  Uso_de_rutas_relativas_por_inyeccion_fantasma_LocalDictionary: {
     const base = devToolkit.fullpathOf("moduler-v5.test/pathmodes");
     const moduler = ModulerV5.create(base);
     const demo2 = await moduler.mean("demo2/index.js");

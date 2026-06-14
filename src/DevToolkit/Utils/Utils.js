@@ -1,6 +1,8 @@
-class Utils {
-  static die(...args) {
-    console.log(...args);
-    process.exit(1);
-  }
+/**
+ * @name DevToolkit.Utils
+ * @type class
+ * @description Clase con utilidades que no encajan en otro dominio.
+ */
+static Utils = class Utils {
+  
 }

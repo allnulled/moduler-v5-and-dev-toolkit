@@ -13,7 +13,7 @@ La especificación ModulerV5 intenta explicar cómo tiene que ser el framework y
     - [C.4. Firmas de los métodos](#c4-firmas-de-los-métodos)
       - [C.5. Firma de la función factory](#c5-firma-de-la-función-factory)
       - [C.6. Variables fantasma en los scripts de dependencias](#c6-variables-fantasma-en-los-scripts-de-dependencias)
-      - [C.7. Particularidades de la variable fantasma $dictionary](#c7-particularidades-de-la-variable-fantasma-dictionary)
+      - [C.7. Particularidades de la variable fantasma LocalDictionary](#c7-particularidades-de-la-variable-fantasma-localdictionary)
       - [C.8. Particularidades de la variable global Dictionary](#c8-particularidades-de-la-variable-global-dictionary)
   - [Ejemplos](#ejemplos)
     - [E.1. Ejemplo de módulo](#e1-ejemplo-de-módulo)
@@ -55,11 +55,11 @@ Conjunto de cláusulas de la especificación.
 #### C.5. Firma de la función factory
 
 - El `factory:Function` recibe:
-   - `...dependencies:Array<any>`: dependencias resultas en el orden proporcionado
+   - `dependencies:Array<any>`: dependencias resultas en el orden proporcionado
    - `module:Object`: la fórmula de node.js para usar `module.exports`
    - `exports:Object`: la fórmula de node.js para usar `exports.<prop>`
-   - `$dictionary:ModulerV5`: instancia de `ModulerV5` que ha hecho la llamada a `define` o `mean`
-      - esto permite usar las firmas `$dictionary.define`, `$dictionary.mean`, etc. para referirse a la instancia local de cada caso
+   - `LocalDictionary:ModulerV5`: instancia de `ModulerV5` que ha hecho la llamada a `define` o `mean`
+      - esto permite usar las firmas `LocalDictionary.define`, `LocalDictionary.mean`, etc. para referirse a la instancia local de cada caso
    - `__filename:String`: ruta completa del fichero actual
    - `__dirname:String`: ruta completa de la carpeta actual
 
@@ -67,10 +67,10 @@ Conjunto de cláusulas de la especificación.
 Su uso quedaría así:
 
 ```js
-$dictionary.define(["./a.js", "./b.js"], function(a, b, module, exports, $dictionary, __filename, __dirname) {
+LocalDictionary.define(["./a.js", "./b.js"], function([a, b], module, exports, LocalDictionary, __filename, __dirname) {
     //...
 });
-$dictionary.mean(["./a.js", "./b.js"], function(a, b, module, exports, $dictionary, __filename, __dirname) {
+LocalDictionary.mean(["./a.js", "./b.js"], function([a, b], module, exports, LocalDictionary, __filename, __dirname) {
     //...
 });
 ```
@@ -83,14 +83,14 @@ $dictionary.mean(["./a.js", "./b.js"], function(a, b, module, exports, $dictiona
 - Las variables fantasma son las mismas que las de la función `factory:Function` pero sin dependencias inyectadas y con los nombres prestablecidos:
    - `module:Object`
    - `exports:Object`
-   - `$dictionary:ModulerV5`
+   - `LocalDictionary:ModulerV5`
    - `__filename:String`
    - `__dirname:String`
 
-#### C.7. Particularidades de la variable fantasma $dictionary
+#### C.7. Particularidades de la variable fantasma LocalDictionary
 
-- Tanto en los scripts importados por `define` y `mean` como en las funciones `factory`, se inyecta la variable `$dictionary`.
-- La variable `$dictionary` es una instancia de la clase `ModulerV5`
+- Tanto en los scripts importados por `define` y `mean` como en las funciones `factory`, se inyecta la variable `LocalDictionary`.
+- La variable `LocalDictionary` es una instancia de la clase `ModulerV5`
    - Es una distancia distinta a la original, vía `ModulerV5.prototype.cloneForFile` se hace un duplicado
    - La única diferencia con la instancia original es que:
       - En el clon, el `basedir` apunta al directorio del fichero que es importado
@@ -98,17 +98,17 @@ $dictionary.mean(["./a.js", "./b.js"], function(a, b, module, exports, $dictiona
       - El `rootdir` es común en ambos ficheros, por eso, y apunta al `basedir` de la instancia original de toda la rama de clones
          - Porque en cada clonación, al clon se le pasa el `rootdir` intacto
 - Esto es lo que permite rutas relativas por cada fichero
-   - Porque `$dictionary.basedir` va cambiando
-- Pero cuidado: esto significa que si retienes los `$dictionary` semánticamente:
-   - El Garbage Collector puede no borrar nunca las instancias `$dictionary`
+   - Porque `LocalDictionary.basedir` va cambiando
+- Pero cuidado: esto significa que si retienes los `LocalDictionary` semánticamente:
+   - El Garbage Collector puede no borrar nunca las instancias `LocalDictionary`
       - Porque una función tiene previsto usarlo, sería el caso más habitual
-   - El uso de `$dictionary` en cada script debería ser:
+   - El uso de `LocalDictionary` en cada script debería ser:
       - síncrono: el primer nivel del script, sin `await`s intermedios
-      - conciso: el uso del `$dictionary` es cargar cosas, y cachear
+      - conciso: el uso del `LocalDictionary` es cargar cosas, y cachear
       - esporádico: no hacer grandes planes con esta variable en los scripts
          - si quieres usar reflection de módulos, es mejor usar directamente `Dictionary`
       - inmediato: en el primer nivel, no dentro de funciones
-      - no retener a `$dictionary` dentro de funciones para hacer magia porque puedes crear basura en memoria
+      - no retener a `LocalDictionary` dentro de funciones para hacer magia porque puedes crear basura en memoria
 
 #### C.8. Particularidades de la variable global Dictionary
 
@@ -116,12 +116,12 @@ $dictionary.mean(["./a.js", "./b.js"], function(a, b, module, exports, $dictiona
 - Es una instancia de `ModulerV5` de acceso global
 - Es la forma normal: cargar las cosas en 1 mismo modulador globalmente
 - Su `rootdir` y su `basedir` siempre coinciden, porque no es un clon
-- Se contrapone a la variable `$dictionary` en que:
-   - `$dictionary` tiene el `basedir` del directorio del script en sí
+- Se contrapone a la variable `LocalDictionary` en que:
+   - `LocalDictionary` tiene el `basedir` del directorio del script en sí
       - es decir, igual que la variable inyectada `__dirname`
-   - `$dictionary` tiene el `rootdir` del `basedir` del modulador original (no clon)
+   - `LocalDictionary` tiene el `rootdir` del `basedir` del modulador original (no clon)
       - y no tiene por qué coincidir con el del `Dictionary`
-      - porque `$dictionary` aparecerá en cualquier script importado de cualquier instancia de modulador, no solo de `Dictionary`
+      - porque `LocalDictionary` aparecerá en cualquier script importado de cualquier instancia de modulador, no solo de `Dictionary`
 
 ----
 
@@ -139,7 +139,7 @@ En el main empiezas el hilo:
 
 ```js
 // main.js
-const lib = await $dictionary.define("./lib.js");
+const lib = await LocalDictionary.define("./lib.js");
 ```
 
 Y ahora las 2 opciones. Nótese que no resultan en lo mismo: una devuelve una promesa (b) y la otra un objeto con 2 promesas (a).
@@ -150,10 +150,10 @@ Opción a, sería la más optimizada - porque los vas exponiendo a medida que lo
 
 ```js
 // lib.js
-export.ab = $dictionary.define(["./lib/a.js","./lib/b.js"], function(a, b) {
+export.ab = LocalDictionary.define(["./lib/a.js","./lib/b.js"], function([a, b]) {
     return { a, b };
 });
-export.cd = $dictionary.define(["./lib/c.js","./lib/d.js"], function(c, d) {
+export.cd = LocalDictionary.define(["./lib/c.js","./lib/d.js"], function([c, d]) {
     return { c, d };
 });
 ```
@@ -177,7 +177,7 @@ Opción b, sería la clásica - es más compacta y fácil de gestionar luego por
 
 ```js
 // lib.js
-module.exports = $dictionary.define(["./lib/a.js","./lib/b.js","./lib/c.js","./lib/d.js"], function(a,b,c,d) {
+module.exports = LocalDictionary.define(["./lib/a.js","./lib/b.js","./lib/c.js","./lib/d.js"], function([a,b,c,d]) {
     return {
         ab: { a, b },
         cd: { c, d },

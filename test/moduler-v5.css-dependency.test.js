@@ -9,7 +9,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     assert(info.counter === 2, "Can add css through mean(String) (point 1)");
   }
   Css_usecase_2: {
-    await Dictionary.mean(["./usecase-2.css"], function(usecase2) {
+    await Dictionary.mean(["./usecase-2.css"], function([usecase2]) {
       assert(typeof usecase2 === "object", "Can access css sheet (point 1)");
       assert(typeof usecase2.newSheets === "object", "Can access css sheet (point 2)");
       assert(typeof usecase2.oldSheets === "object", "Can access css sheet (point 3)");
@@ -19,7 +19,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     assert(info.counter === 4, "Can add css through mean(Array, Function) (point 1)");
   }
   Css_usecase_3: {
-    await Dictionary.define(["./usecase-3.css"], function(usecase3) {
+    await Dictionary.define(["./usecase-3.css"], function([usecase3]) {
       assert(typeof usecase3 === "object", "Can access css sheet (point 1)");
       assert(typeof usecase3.newSheets === "object", "Can access css sheet (point 2)");
       assert(typeof usecase3.oldSheets === "object", "Can access css sheet (point 3)");

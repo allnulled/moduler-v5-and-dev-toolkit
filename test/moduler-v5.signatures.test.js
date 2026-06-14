@@ -29,7 +29,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     assert(signatures.signa6 === 77, "Can import using signature mean(Function) (point 10)");
   }
   Firma_interna_de_factory_en_mean_Function: {
-    await Dictionary.mean(function (module, exports, dictionary, __filename, __dirname) {
+    await Dictionary.mean(function (dependencies, module, exports, dictionary, __filename, __dirname) {
       assert(typeof module === "object", "Can find module as parameter from mean(Function) (point 2)");
       assert(typeof exports === "object", "Can find exports as parameter from mean(Function) (point 3)");
       assert(module.exports === exports, "Can find module and exports as parameters from mean(Function) (point 4)");
@@ -39,7 +39,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     })
   }
   Firma_interna_de_factory_en_define_Function: {
-    await Dictionary.define(function (module, exports, dictionary, __filename, __dirname) {
+    await Dictionary.define(function (dependencies, module, exports, dictionary, __filename, __dirname) {
       assert(typeof module === "object", "Can find module as parameter from define(Function) (point 2)");
       assert(typeof exports === "object", "Can find exports as parameter from define(Function) (point 3)");
       assert(module.exports === exports, "Can find module and exports as parameters from define(Function) (point 4)");
@@ -49,7 +49,7 @@ module.exports = async function ({ DevToolkit, devToolkit, ModulerV5, startTime,
     });
   }
   Firma_interna_de_factory_en_define_Array_Function: {
-    await Dictionary.define([() => 800], function (p1, module, exports, dictionary, __filename, __dirname) {
+    await Dictionary.define([() => 800], function ([p1], module, exports, dictionary, __filename, __dirname) {
       assert(p1 === 800, "Can find injected parameters from define(Array,Function) (point 1)");
       assert(typeof module === "object", "Can find module as parameter from define(Array,Function) (point 2)");
       assert(typeof exports === "object", "Can find exports as parameter from define(Array,Function) (point 3)");

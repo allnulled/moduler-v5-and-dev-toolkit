@@ -1,0 +1,1 @@
+return LocalDictionary.mean(_ => 77);

@@ -78,6 +78,5 @@ module.exports = async function (...args) {
    - data:Array<Object> - Filas retornadas por la tabla y el filtro especificados.
 `;
   assert(docsText === expectedText, "can extract markdown as expected");
-  await require("fs").promises.writeFile(`${__dirname}/unwatched/devtoolkit-documentator.test/documented-1.md`, docsText, "utf8");
-  DevToolkit.Debug.die(0);
+  await require("fs").promises.writeFile(`${__dirname}/tests-assets/devtoolkit-documentator.test/documented-1.md`, docsText, "utf8");
 };

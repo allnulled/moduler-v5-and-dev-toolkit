@@ -1,5 +1,5 @@
 define(...args) {
-  this.trace("define", arguments);
+  
   let dependencies = [];
   let factory = undefined;
   Validate_parameters: {

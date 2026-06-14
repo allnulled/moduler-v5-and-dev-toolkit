@@ -1,5 +1,11 @@
+/**
+ * @name DevToolkit.Documentator.prototype._extractJavadocCommentsFromString
+ * @type private class method
+ * @parameter text:String - Texto que puede contener comentarios javadoc. 
+ * @returns Array<Object> - Lista de comentarios javadoc, representados por objetos.
+ * @description Método que devuelve los comentarios javadoc encontrados en un string.
+ */
 _extractJavadocCommentsFromString(text) {
-  this.trace("_extractJavadocCommentsFromString", arguments);
   const matches = text.match(this.constructor.symbols.REGEX_JAVADOC_COMMENT);
   if (!matches) return [];
   const javadocComments = [];

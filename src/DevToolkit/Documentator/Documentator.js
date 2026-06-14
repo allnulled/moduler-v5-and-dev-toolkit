@@ -1,4 +1,9 @@
-class Documentator {
+/**
+ * @name DevToolkit.Documentator
+ * @type class 
+ * @description Utilidades para documentación de DevToolkit
+ */
+static Documentator = class Documentator {
   /*<$=await include("./constructor.js")$>*/
   /*<$=await include("./symbols.js")$>*/
   /*<$=await include("./prototype._findFiles.js")$>*/

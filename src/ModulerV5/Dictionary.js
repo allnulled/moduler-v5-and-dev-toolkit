@@ -1,1 +1,1 @@
-ModulerV5.Dictionary =  new ModulerV5();
+ModulerV5.Dictionary = new ModulerV5();

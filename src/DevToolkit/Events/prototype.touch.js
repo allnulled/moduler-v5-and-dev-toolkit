@@ -1,5 +1,10 @@
+/**
+ * @name DevToolkit.Events.prototype.touch
+ * @parameter file:String - Fichero que se quiere hacer el touch.
+ * @returns Promise<void> - No devuelve nada actualmente
+ * @description Primero bloquea el semáforo, luego propaga el touch, el test, el distribute, y luego desbloquea el semáforo.
+ */
 async touch(file) {
-  this.trace("prototype.touch", arguments, 0);
   Acquire_semaphore: {
     await this.toolkit.semaphore.acquire();
   }

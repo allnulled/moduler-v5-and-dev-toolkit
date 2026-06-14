@@ -5,7 +5,7 @@ callModuleFactory(dependencyPromises, factory, submoduler = null, filename = nul
   const initialState = {};
   const modulo = { exports: initialState };
   return Promise.all(dependencyPromises).then(async resolvedDependencies => {
-    const output = await factory(...resolvedDependencies, modulo, modulo.exports, submoduler ?? this, filename, dirname);
+    const output = await factory(resolvedDependencies, modulo, modulo.exports, submoduler ?? this, filename, dirname);
     const returnsUndefined = typeof output === "undefined";
     const isNotInitialState = modulo.exports !== initialState;
     const hasNewProperties = 0 !== Object.keys(modulo.exports).length;

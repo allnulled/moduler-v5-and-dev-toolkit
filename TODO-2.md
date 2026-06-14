@@ -34,14 +34,3 @@
    🔴 src, dist, test/unit, dev/touch.js, guide
 
 ---------------------------------------------------------------
-
-opcional:
-
-🔴 inject parser
-   🔴 para meter plantillas html
-   🔴 en todas las formas legacy posibles
-   🔴 sin cachear strings innecesariamente
-   🔴 por eso no van al modulerv5 sino al devtoolkit
-   🔴 tests
-
----------------------------------------------------------------

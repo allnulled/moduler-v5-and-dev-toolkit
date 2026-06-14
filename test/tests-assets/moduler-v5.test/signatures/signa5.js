@@ -1,0 +1,1 @@
+return LocalDictionary.mean("./signa5-data.js");

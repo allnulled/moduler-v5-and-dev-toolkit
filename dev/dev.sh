@@ -16,11 +16,13 @@ pwd > cwd.txt
     -i "**/coverage/**/*" \
     -i "**/.nyc_output/**/*" \
     -i "**/dist-instrumented/**/*" \
-    -i "**/unwatched/file-watcher/**/*" \
-    -i "**/unwatched/devtoolkit-cli.test/**/*" \
-    -i "**/unwatched/devtoolkit-documentator.test/**/*" \
-    -i "**/unwatched/events/**/*" \
+    -i "**/tests-assets/file-watcher/**/*" \
+    -i "**/tests-assets/devtoolkit-cli.test/**/*" \
+    -i "**/tests-assets/devtoolkit-documentator.test/**/*" \
+    -i "**/tests-assets/events/**/*" \
     -i "**/semaphore.*" \
+    -i "**/API.md" \
+    -i "**/README.md" \
     -i "**/blank-project/**/*" \
     -d 0 \
     -mf "TODO.md" \
