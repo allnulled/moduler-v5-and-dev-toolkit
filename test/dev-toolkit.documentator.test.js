@@ -3,7 +3,7 @@ module.exports = async function (...args) {
   const { assert, assertDeepEqual } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "DevToolkit/documentator".padEnd(titleColumns) });
   assert(1, "DevToolkit/documentator");
   const docsJson = await devToolkit.documentator.extractJavadocCommentsFromDirectory();
-  /*
+  //*
   console.log(docsJson);
   for (let index = 0; index < docsJson.length; index++) {
     const doc = docsJson[index];
@@ -39,9 +39,9 @@ module.exports = async function (...args) {
           "filter:Function - Función que se usa para filtrar los elementos de la tabla que quieren extraerse"
         ],
         "@returns": [
-          "data:Array<Object> - Filas retornadas por la tabla y el filtro especificados. ",
-          "data:Array<Object> - \nPero puedes poner mas",
-          "data:Array<Object> - Filas retornadas por la tabla y el filtro especificados. \n"
+          "data:`Array<Object>` - Filas retornadas por la tabla y el filtro especificados. ",
+          "data:`Array<Object>` - \nPero puedes poner mas",
+          "data:`Array<Object>` - Filas retornadas por la tabla y el filtro especificados. \n"
         ]
       }
     ]
@@ -72,10 +72,10 @@ module.exports = async function (...args) {
    - table:String - Nombre de la tabla de la que se quieren extraer las filas.
    - filter:Function - Función que se usa para filtrar los elementos de la tabla que quieren extraerse
 - **@returns:**
-   - data:Array<Object> - Filas retornadas por la tabla y el filtro especificados.
-   - data:Array<Object> - 
+   - data:\`Array<Object>\` - Filas retornadas por la tabla y el filtro especificados.
+   - data:\`Array<Object>\` - 
       - Pero puedes poner mas
-   - data:Array<Object> - Filas retornadas por la tabla y el filtro especificados.
+   - data:\`Array<Object>\` - Filas retornadas por la tabla y el filtro especificados.
 `;
   assert(docsText === expectedText, "can extract markdown as expected");
   await require("fs").promises.writeFile(`${__dirname}/tests-assets/devtoolkit-documentator.test/documented-1.md`, docsText, "utf8");

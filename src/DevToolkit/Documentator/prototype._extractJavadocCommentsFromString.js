@@ -2,7 +2,7 @@
  * @name DevToolkit.Documentator.prototype._extractJavadocCommentsFromString
  * @type private class method
  * @parameter text:String - Texto que puede contener comentarios javadoc. 
- * @returns Array<Object> - Lista de comentarios javadoc, representados por objetos.
+ * @returns `Array<Object>`- Lista de comentarios javadoc, representados por objetos.
  * @description Método que devuelve los comentarios javadoc encontrados en un string.
  */
 _extractJavadocCommentsFromString(text) {

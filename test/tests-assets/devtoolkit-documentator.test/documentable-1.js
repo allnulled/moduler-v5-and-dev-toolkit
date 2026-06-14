@@ -20,10 +20,10 @@ class Example {
      * 
      * @parameter table:String - Nombre de la tabla de la que se quieren extraer las filas.
      * @parameter filter:Function - Función que se usa para filtrar los elementos de la tabla que quieren extraerse
-     * @returns data:Array<Object> - Filas retornadas por la tabla y el filtro especificados. 
-     * @returns data:Array<Object> - 
+     * @returns data:`Array<Object>` - Filas retornadas por la tabla y el filtro especificados. 
+     * @returns data:`Array<Object>` - 
      * Pero puedes poner mas
-     * @returns data:Array<Object> - Filas retornadas por la tabla y el filtro especificados. 
+     * @returns data:`Array<Object>` - Filas retornadas por la tabla y el filtro especificados. 
      */
     static select(table, filter) {
 
