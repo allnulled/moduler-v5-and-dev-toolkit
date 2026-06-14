@@ -3,7 +3,7 @@
  * @type static method
  * @parameter dir:String - Fichero absoluto
  * @parameter options:Object - Opciones. Ahora mismo solo acepta `inTry:Boolean=false`, que en `true` falla silenciosamente.
- * @returns Promise<void> - Lo mismo que fs.promises.unlink
+ * @returns `Promise<void>` - Lo mismo que fs.promises.unlink
  * @description Elimina un directorio, recursivamente.
  */
 static deleteFile(file, options = { inTry: false }) {

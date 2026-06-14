@@ -3,7 +3,7 @@
  * @type class method
  * @parameter dir:String - Directorio
  * @parameter options:Object - Opciones pasadas a su homólogo estático.
- * @returns Promise<void>
+ * @returns `Promise<void>`
  * @description Elimina un directorio.
  * @differences Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
  */

@@ -3,7 +3,7 @@
  * @type class method
  * @parameter dir:String - Directorio absoluto.
  * @parameter options:Object - Opciones. Admite un `filter:Function<fsnode:String>:Boolean` para usar como filtro y discriminar qué partes del directorio no quieres incluir en la representación. Esto puede ser útil si quieres que 1 fichero contenga la representación final de la estructura del directorio, y así evitas que la representación objetual se haga incremental.
- * @returns Promise<Object> - Representación objetual del directorio proporcionado.
+ * @returns `Promise<Object>` - Representación objetual del directorio proporcionado.
  * @description Construye la representación objetual de un directorio.
  */
 static async fromDirectoryToObject(dir, options = {}) {

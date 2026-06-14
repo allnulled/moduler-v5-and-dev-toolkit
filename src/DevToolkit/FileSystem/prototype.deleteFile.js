@@ -3,7 +3,7 @@
  * @type class method
  * @parameter file:String - Fichero
  * @parameter options:Object - Opciones pasadas a su homólogo estático.
- * @returns Promise<void>
+ * @returns `Promise<void>`
  * @description Elimina un fichero.
  * @differences Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
  */

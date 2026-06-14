@@ -6,7 +6,7 @@
  *   - cwd: `this.toolkit.basedir` (este sí puede sobreescribir)
  *   - absolute: `true`
  *   - ignore: `node_modules` (este puede extenderse, pero no sobreescribirse)
- * @returns Promise<Array<String>> - Es una llamada asíncrona, así que devuelve una promesa, con la lista de ficheros encontrados.
+ * @returns `Promise<Array<String>>` - Es una llamada asíncrona, así que devuelve una promesa, con la lista de ficheros encontrados.
  */
 _findFiles(globPattern = "**/*.js", options = {}) {
   return require("glob").glob(globPattern, {

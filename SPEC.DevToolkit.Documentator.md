@@ -25,10 +25,10 @@ No hay tags específicos, todos valen.
 
 Uno de los métodos permite extraer todo el texto de los comentarios javadoc.
 
-Este método es el `extractJavadocTextFromDirectory(dir:String):Promise<String>`.
+Este método es el `extractJavadocTextFromDirectory(dir:String):`Promise<String>``.
 
 ### C.3. Poder extraer el JSON de los comentarios
 
 Otro de los métodos permite extraer los comentarios javadoc por cada fichero que contenga alguno, en formato JSON.
 
-Este método es el `extractJavadocCommentsFromDirectory(dir:String):Promise<Array<Object>>`.
+Este método es el `extractJavadocCommentsFromDirectory(dir:String):`Promise<Array<Object>>``.

@@ -2,7 +2,7 @@
  * @name DevToolkit.FileSystem.prototype.writeDirectory
  * @type class method
  * @parameter file:String - Directorio, puede ser relativo.
- * @returns Promise<void>
+ * @returns `Promise<void>`
  * @description Crea un directorio con fs.promises.mkdir
  * @differences Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
  */

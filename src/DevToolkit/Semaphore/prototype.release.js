@@ -1,6 +1,6 @@
 /**
  * @name DevToolkit.Semaphore.prototype.release
- * @returns Promise<void> - No devuelve nada, solo que usa fs.promises.writeFile y devuelve lo que este.
+ * @returns `Promise<void>` - No devuelve nada, solo que usa fs.promises.writeFile y devuelve lo que este.
  * @description Escribe `"released"` en el fichero semáforo.
  */
 release() {

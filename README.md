@@ -181,7 +181,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
       - - cwd: `this.toolkit.basedir` (este sí puede sobreescribir)
       - - absolute: `true`
       - - ignore: `node_modules` (este puede extenderse, pero no sobreescribirse)
-- **@returns:** Promise<Array<String>> - Es una llamada asíncrona, así que devuelve una promesa, con la lista de ficheros encontrados.
+- **@returns:** `Promise<Array<String>>` - Es una llamada asíncrona, así que devuelve una promesa, con la lista de ficheros encontrados.
 
 ----
 
@@ -196,7 +196,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.Documentator.prototype.extractJavadocCommentsFromDirectory
 - **@type:** class method
 - **@parameter:** dir:String - Directorio del cual que quieren extraer los comentarios. Se entiende que solo son ficheros `.js`. Ahora mismo esto no se puede cambiar, pero puede que se cambie más adelante. Por defecto usa el `this.toolkit.basedir`.
-- **@returns:** Promise<Object> - Objeto con los nombres de ficheros (relativos, empiezan con `{@root}/`) y los comentarios javadoc encontrados en cada uno.
+- **@returns:** `Promise<Object>` - Objeto con los nombres de ficheros (relativos, empiezan con `{@root}/`) y los comentarios javadoc encontrados en cada uno.
 - **@description:** Extrae todos los comentarios javadoc encontrados en ficheros js de un directorio dado.
 
 ----
@@ -206,7 +206,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio del cual se quieren extraer los comentarios javadoc.
    - options:Object - Opciones. Actualmente no tiene uso. Por defecto, un objeto vacío.
-- **@returns:** Promise<String> - Texto compuesto por todos los comentarios javadoc encontrados.
+- **@returns:** `Promise<String>` - Texto compuesto por todos los comentarios javadoc encontrados.
 - **@description:** Devuelve el texto de todos los comentarios javadoc encontrador bajo un directorio. Utiliza `this.extractJavadocCommentsFromDirectory` por dentro.
 
 ----
@@ -253,6 +253,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 
 - **@name:** DevToolkit.CommandLine.prototype.createProject
 - **@type:** class method
+- **@returns:** true - Si todo ha ido bien.
 - **@description:** Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
 
 ----
@@ -325,14 +326,14 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 
 - **@name:** DevToolkit.Events.prototype.touch
 - **@parameter:** file:String - Fichero que se quiere hacer el touch.
-- **@returns:** Promise<void> - No devuelve nada actualmente
+- **@returns:** `Promise<void>` - No devuelve nada actualmente
 - **@description:** Primero bloquea el semáforo, luego propaga el touch, el test, el distribute, y luego desbloquea el semáforo.
 
 ----
 
 - **@name:** DevToolkit.Events.prototype.propagateOnTouch
 - **@parameter:** file:String - Fichero del cual se quiere propagar el touch.
-- **@returns:** Promise<void> - No devuelve nada actualmente.
+- **@returns:** `Promise<void>` - No devuelve nada actualmente.
 - **@description:** Realiza la propagación de tipo Touch para un fichero dado.
 
 ----
@@ -371,13 +372,13 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 
 - **@name:** DevToolkit.Semaphore.prototype.acquire
 - **@type:** class method
-- **@returns:** Promise<void> - No devuelve nada.
+- **@returns:** `Promise<void>` - No devuelve nada.
 - **@description:** Bloquea el semáforo, o lanza un error si no está liberado. Si el error es que no existe el fichero, lo ignora y lo crea. El semáforo está desbloqueado si su contenido es `released`.
 
 ----
 
 - **@name:** DevToolkit.Semaphore.prototype.release
-- **@returns:** Promise<void> - No devuelve nada, solo que usa fs.promises.writeFile y devuelve lo que este.
+- **@returns:** `Promise<void>` - No devuelve nada, solo que usa fs.promises.writeFile y devuelve lo que este.
 - **@description:** Escribe `"released"` en el fichero semáforo.
 
 ----
@@ -385,7 +386,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.Semaphore.prototype.destroy
 - **@type:** class method
 - **@throws:** Error - Lanza el error que se produzca por unlink, a no ser que fuera que el fichero no existía, en cuyo caso devuelve false solamente.
-- **@returns:** Promise<Boolean> - Devuelve true si existía, false si no existía.
+- **@returns:** `Promise<Boolean>` - Devuelve true si existía, false si no existía.
 - **@description:** Elimina el fichero de semáforo.
 
 ----
@@ -418,7 +419,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.exists
 - **@type:** static method
 - **@parameter:** dir:String - Fichero o directorio absoluto
-- **@returns:** Promise<Object|false> - Lo mismo que fs.promises.lstat. Si falla, silencia el error y devuelve false.
+- **@returns:** `Promise<Object|false>` - Lo mismo que fs.promises.lstat. Si falla, silencia el error y devuelve false.
 - **@description:** Comprueba si un fichero o directorio vive en la ruta proporcionada.
 
 ----
@@ -426,7 +427,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.existsDirectory
 - **@type:** static method
 - **@parameter:** file:String - Ficero absoluto
-- **@returns:** Promise<Boolean> - Devuelve true si es un fichero, false en cualquier otro caso.
+- **@returns:** `Promise<Boolean>` - Devuelve true si es un fichero, false en cualquier otro caso.
 - **@description:** Comprueba si un fichero vive en la ruta proporcionada.
 
 ----
@@ -436,7 +437,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Fichero absoluto
    - options:Object - Opciones. Ahora mismo solo permite `inTry:Boolean=false`, que en `true` silenciará el error, y devolverá `false`.
-- **@returns:** Promise<String> - El contenido de un fichero en utf8.
+- **@returns:** `Promise<String>` - El contenido de un fichero en utf8.
 - **@description:** Devuelve el contenido de un fichero.
 
 ----
@@ -447,7 +448,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
    - file:String - Fichero absoluto
    - contents:String - Contenido con el que sobreescribir
    - options:Object - Opciones pasadas. Ahora mismo no admite nada.
-- **@returns:** Promise<void> - Devuelve lo mismo que fs.promises.writeFile
+- **@returns:** `Promise<void>` - Devuelve lo mismo que fs.promises.writeFile
 - **@description:** Sobreescribe un fichero con el contenido especificado.
 
 ----
@@ -457,7 +458,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Fichero absoluto
    - options:Object - Opciones. Ahora mismo solo acepta `inTry:Boolean=false`, que en `true` falla silenciosamente.
-- **@returns:** Promise<void> - Lo mismo que fs.promises.unlink
+- **@returns:** `Promise<void>` - Lo mismo que fs.promises.unlink
 - **@description:** Elimina un directorio, recursivamente.
 
 ----
@@ -465,7 +466,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.existsDirectory
 - **@type:** static method
 - **@parameter:** dir:String - Directorio absoluto
-- **@returns:** Promise<Boolean> - Devuelve true si es un directorio, false en cualquier otro caso.
+- **@returns:** `Promise<Boolean>` - Devuelve true si es un directorio, false en cualquier otro caso.
 - **@description:** Comprueba si un directorio vive en la ruta proporcionada.
 
 ----
@@ -475,7 +476,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio absoluto
    - options:Object - Opciones. Ahora mismo solo permite `inTry:Boolean=false`, que en `true` silenciará el error, y devolverá `false`.
-- **@returns:** Promise<Array<String>> - Los ficheros y directorios contenidos dentro.
+- **@returns:** `Promise<Array<String>>` - Los ficheros y directorios contenidos dentro.
 - **@description:** Devuelve los contenidos de un directorio.
 
 ----
@@ -483,7 +484,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.writeDirectory
 - **@type:** static method
 - **@parameter:** dir:String - Directorio absoluto
-- **@returns:** Promise<void> - Devuelve lo mismo que fs.promises.mkdir
+- **@returns:** `Promise<void>` - Devuelve lo mismo que fs.promises.mkdir
 - **@description:** Construye un directorio
 
 ----
@@ -493,7 +494,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio absoluto
    - options:Object - Opciones. Ahora mismo solo acepta `inTry:Boolean=false`, que en `true` falla silenciosamente.
-- **@returns:** Promise<void> - Lo mismo que fs.promises.rm
+- **@returns:** `Promise<void>` - Lo mismo que fs.promises.rm
 - **@description:** Elimina un directorio, recursivamente.
 
 ----
@@ -503,7 +504,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio absoluto
    - options:Object - Opciones. Ahora mismo solo acepta `inTry:Boolean=false`, que en `true` falla silenciosamente.
-- **@returns:** Promise<void> - Lo mismo que fs.promises.mkdir
+- **@returns:** `Promise<void>` - Lo mismo que fs.promises.mkdir
 - **@description:** Elimina un directorio recursivamente, y luego lo crea, lo cual al final es como haberlo vaciado.
 
 ----
@@ -513,7 +514,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio absoluto.
    - options:Object - Opciones. Admite un `filter:Function<fsnode:String>:Boolean` para usar como filtro y discriminar qué partes del directorio no quieres incluir en la representación. Esto puede ser útil si quieres que 1 fichero contenga la representación final de la estructura del directorio, y así evitas que la representación objetual se haga incremental.
-- **@returns:** Promise<Object> - Representación objetual del directorio proporcionado.
+- **@returns:** `Promise<Object>` - Representación objetual del directorio proporcionado.
 - **@description:** Construye la representación objetual de un directorio.
 
 ----
@@ -523,7 +524,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - obj:Object - Representación objetual de un directorio.
    - dir:String - Directorio raíz donde se quiere reconstruir la representación objetual
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Reconstruye un directorio a partir de una representación objetual de directorio, y el directorio raíz.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -532,7 +533,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.sizeOf
 - **@type:** static method
 - **@parameter:** dir:String - Fichero absoluto
-- **@returns:** Promise<Integer> - El tamaño de un fichero o directorio
+- **@returns:** `Promise<Integer>` - El tamaño de un fichero o directorio
 - **@description:** Devuelve el tamaño de un fichero o directorio
 
 ----
@@ -547,7 +548,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.exists
 - **@type:** class method
 - **@parameter:** file:String - Fichero o directorio, puede ser relativo.
-- **@returns:** Promise<Boolean>
+- **@returns:** `Promise<Boolean>`
 - **@description:** Dice si existe un fichero o directorio en la ruta proporcionada
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -556,7 +557,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.existsFile
 - **@type:** class method
 - **@parameter:** file:String - Fichero, puede ser relativo.
-- **@returns:** Promise<Boolean>
+- **@returns:** `Promise<Boolean>`
 - **@description:** Dice si existe un fichero (no directorio) en la ruta proporcionada
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -565,7 +566,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.readDirectory
 - **@type:** class method
 - **@parameter:** file:String - Fichero, puede ser relativo.
-- **@returns:** Promise<Array<String>>
+- **@returns:** `Promise<Array<String>>`
 - **@description:** Lee un fichero y devuelve su contenido en utf8
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -576,7 +577,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - file:String - Fichero, puede ser relativo.
    - contents:String - Contenido del fichero
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Sobreescribe un fichero con fs.promises.writeFile
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -587,16 +588,16 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - file:String - Fichero
    - options:Object - Opciones pasadas a su homólogo estático.
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Elimina un fichero.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
 ----
 
-- **@name:** DevToolkit.FileSystem.prototype.exists
+- **@name:** DevToolkit.FileSystem.prototype.existsDirectory
 - **@type:** class method
 - **@parameter:** dir:String - Directorio, puede ser relativo.
-- **@returns:** Promise<Boolean>
+- **@returns:** `Promise<Boolean>`
 - **@description:** Dice si existe un directorio en la ruta proporcionada
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -605,7 +606,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.readDirectory
 - **@type:** class method
 - **@parameter:** dir:String - Directorio, puede ser relativo.
-- **@returns:** Promise<Array<String>>
+- **@returns:** `Promise<Array<String>>`
 - **@description:** Lee un directorio y devuelve sus rutas
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -614,7 +615,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.writeDirectory
 - **@type:** class method
 - **@parameter:** file:String - Directorio, puede ser relativo.
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Crea un directorio con fs.promises.mkdir
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -625,7 +626,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - dir:String - Directorio
    - options:Object - Opciones pasadas a su homólogo estático.
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Elimina un directorio.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -633,7 +634,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 
 - **@name:** DevToolkit.FileSystem.prototype.emptyDirectory
 - **@type:** class method
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Vacía un directorio pero no lo elimina.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -642,7 +643,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.fromDirectoryToObject
 - **@type:** class method
 - **@parameter:** file:String - Directorio, puede ser relativo.
-- **@returns:** Promise<Object>
+- **@returns:** `Promise<Object>`
 - **@description:** Construye la representación objetual de un directorio.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -653,7 +654,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@parameter:**
    - obj:Object - Representación objetual de un directorio.
    - dir:String - Directorio raíz donde se quiere reconstruir la representación objetual
-- **@returns:** Promise<void>
+- **@returns:** `Promise<void>`
 - **@description:** Reconstruye un directorio a partir de una representación objetual de directorio, y el directorio raíz.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
@@ -662,7 +663,7 @@ A continuación se expone toda la API documentada de tanto `DevToolkit` como de 
 - **@name:** DevToolkit.FileSystem.prototype.sizeOf
 - **@type:** class method
 - **@parameter:** file:String - fichero, puede ser relativo.
-- **@returns:** Promise<Integer> - El size que devuelve el lstat de node.js
+- **@returns:** `Promise<Integer>` - El size que devuelve el lstat de node.js
 - **@description:** Lee el lstat del fichero y devuelve el resultado.
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 

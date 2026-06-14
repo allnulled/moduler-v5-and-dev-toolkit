@@ -3,7 +3,7 @@
  * @type class method
  * @parameter dir:String - Directorio del cual se quieren extraer los comentarios javadoc.
  * @parameter options:Object - Opciones. Actualmente no tiene uso. Por defecto, un objeto vacío.
- * @returns Promise<String> - Texto compuesto por todos los comentarios javadoc encontrados.
+ * @returns `Promise<String>` - Texto compuesto por todos los comentarios javadoc encontrados.
  * @description Devuelve el texto de todos los comentarios javadoc encontrador bajo un directorio. Utiliza `this.extractJavadocCommentsFromDirectory` por dentro.
  */
 async extractJavadocTextFromDirectory(dir = this.toolkit.basedir, options = {}) {

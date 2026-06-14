@@ -1,7 +1,7 @@
 /**
  * @name DevToolkit.Semaphore.prototype.acquire
  * @type class method
- * @returns Promise<void> - No devuelve nada.
+ * @returns `Promise<void>` - No devuelve nada.
  * @description Bloquea el semáforo, o lanza un error si no está liberado. Si el error es que no existe el fichero, lo ignora y lo crea. El semáforo está desbloqueado si su contenido es `released`.
  */
 async acquire() {

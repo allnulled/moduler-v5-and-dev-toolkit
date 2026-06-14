@@ -1,7 +1,7 @@
 /**
  * @name DevToolkit.FileSystem.prototype.emptyDirectory
  * @type class method
- * @returns Promise<void>
+ * @returns `Promise<void>`
  * @description Vacía un directorio pero no lo elimina.
  * @differences Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
  */

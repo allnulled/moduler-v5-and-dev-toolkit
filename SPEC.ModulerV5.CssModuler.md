@@ -26,7 +26,7 @@ Conjunto de cláusulas de la especificación.
 
 ### C.2. Hay un método para registrar hojas css
 
-- El método `ModulerV5.prototype.css.add(subpath:String):Promise<Object>` permite:
+- El método `ModulerV5.prototype.css.add(subpath:String):`Promise<Object>`` permite:
    - registrar una hoja css
    - registrar las hoja css incluidas por esa hoja css con la sintaxis `/*@requires:x.css*/`
    - registrar las hoja css incluidas por esas incluidas, y así recursivamente, hasta resolver todos los módulos.
@@ -37,13 +37,13 @@ Conjunto de cláusulas de la especificación.
 
 ### C.3. Hay un método para desregistrar hojas css
 
-- El método `ModulerV5.prototype.css.remove(subpath:String):Promise<Object>` permite:
+- El método `ModulerV5.prototype.css.remove(subpath:String):`Promise<Object>`` permite:
    - desregistrar una hoja css
    - finalmente, cuando se llame a `ModulerV5.prototype.css.synchronize()`, se asegurará que esa hoja css no aparezca en el css final
 
 ### C.4. Hay un método para sincronizar
 
-- El método `ModulerV5.prototype.css.synchronize():Promise<Object>` permite:
+- El método `ModulerV5.prototype.css.synchronize():`Promise<Object>`` permite:
    - refrescar las hojas css actualmente cargadas por el navegador a través de esa instancia `CssModuler`.
    - lo que sucede es que:
       - `synchronize()` genera una hoja css final con los módulos cargados y ordenados por orden de dependencia
