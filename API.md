@@ -1,5 +1,406 @@
 ----
 
+**{@root}/moduler-v5/moduler-v5.dist.js**
+
+----
+
+- **@name:** ModulerV5
+- **@type:** class
+- **@description:** Clase útil para modulación en runtime de JavaScript y CSS.
+- **@exports:**
+   - window.ModulerV5 - Para poder encontrarla en el browser globalmente
+   - global.ModulerV5 - Para poder encontrarla en node.js globalmente
+   - module.exports - Para poder importarla en node.js con require o import
+- **@file:** moduler-v5.dist.js
+
+----
+
+- **@name:** ModulerV5.default
+- **@type:** static property
+- **@description:** Una referencia a la misma clase, para poder importarla con `import` además de con `module.exports`.
+
+----
+
+- **@name:** ModulerV5.CssModuler
+- **@type:** class
+- **@description:** Clase encargada de gestionar la modulación en runtime de ficheros y sincronización en runtime de estilos CSS
+
+----
+
+- **@name:** ModulerV5.CssModuler.create
+- **@type:** static method
+- **@description:** Método típico para facilitar la creación de la clase.
+
+----
+
+- **@name:** ModulerV5.fakeCssStyleSheet
+- **@type:** static method
+- **@returns:** fakeStyleSheet:FakeCssStyleSheet
+- **@description:** Devuelve una CSSStyleSheet de tipo fake, para polifilear lo mínimo en entornos no-navegador.
+
+----
+
+- **@name:** ModulerV5.CssModuler.symbols
+- **@type:** static property + Object
+- **@description:** Contiene las regex usadas por la clase, como la del `/ *@requires:...* /`.
+
+----
+
+- **@name:** ModulerV5.CssModuler.constructor
+- **@type:** class constructor
+- **@parameter:** moduler:ModulerV5 - Instancia de ModulerV5 para esta instancia de CssModuler. 
+- **@sets:**
+   - this.moduler:ModulerV5 - Del parámetro proporcionado.
+   - this.sheets:`Object<String>` - Objeto con los códigos CSS asociados con el fichero que los introdujo
+   - this.entry:CSSStyleSheet|FakeCssStyleSheet - Propiedad que guarda y sincroniza el CSS. Se basa en la clase oficial del estándar de los navegadores, pero en node.js se polifilea con un objeto propio.
+- **@description:** Método constructor. Después de establecer las propiedades, inyecta la CSSStyleSheet en el document.adoptedStyleSheets, aunque esté vacía, que lo está.
+
+----
+
+- **@name:** ModulerV5.CssModuler.prototype.assert
+- **@type:** class method
+- **@parameter:**
+   - condition:Boolean - Condición que se aserciona
+   - message:String - Mensaje de error en caso de la aserción fallar
+- **@description:** Método propio para hacer aserciones locales en algunos métodos.
+
+----
+
+- **@name:** ModulerV5.CssModuler.prototype.add
+- **@type:** class method
+- **@parameter:**
+   - input1:String - Ruta al fichero css. Se usa el método `ModulerV5.prototype.fullpathOf` para normalizar.
+   - eventToAdd:Object - Objeto del evento de añadir. Usa las propiedades oldSheets, newSheets y count.
+- **@returns:** eventToAdd:Object - Objeto que representa el evento de añadir.
+- **@sets:**
+   - eventToAdd.oldSheets - Va poniendo las sheets que ya se conocían en this.sheets, antes de iniciar el evento de añadir.
+   - eventToAdd.newSheets - Va poniendo las sheets que no se conocían en this.sheets antes de iniciar el evento de añadir.
+   - eventToAdd.count - Va incrementando el contador a medida que las va encontrando.
+- **@description:** Añade recursivamente, llamando a this.add recursivamente y pasándole el mismo objeto del evento de añadir, las dependencias especificadas con comentarios css que cumplan el patrón: `/ *@requires:fichero.css* /`
+- **@explanation:**
+   - Añade la hoja especificada, en old o new. Si está en old, no la analiza. Pero si entra en newSheets, analiza el contenido para extraer los `/ *@requires:fichero.css* /`, y los añade con `this.add` recursivamente.
+   - Los objetos que representan a cada fichero css tienen las propiedades id:String, source:String, requires:`Array<String>`.
+   - Otro dato importante es que en cada nuevo fichero/dependencia, crea un ModulerV5 diferente, con una ruta propia fijada al fichero css que se está incluyendo. De esta forma, el fichero css soporta rutas relativas, y puedes importar ficheros así: `/ *@requires:./fichero.css* /`
+----
+
+- **@name:** ModulerV5.CssModuler.prototype._sortSheets
+- **@type:** private method
+- **@parameter:** eventToSync:Object - Se usarán las propiedades dependencies y counter
+- **@returns:** void - Nada.
+- **@description:** Método que ordena según la inter-dependencia de los ficheros css añadidos en la instancia, donde los que dependen van después de sus propias dependencias.
+- **@sets:**
+   - eventToSync.dependencies - Especifíca en el objeto del evento de sincronización todas las dependencias acumuladas.
+   - eventToSync.counter - Especifíca también la cantidad de dependencias acumuladas (el length del anterior, vaya).
+----
+
+- **@name:** ModulerV5.CssModuler.prototype._generateSource
+- **@type:** private method
+- **@parameter:** eventToSync:Object - Se usará su propiedad eventToSync.dependencies y eventToSync.source
+- **@returns:** void - Nada.
+- **@description:** Este método acumula el css de las dependencias especificadas y lo vuelva en eventToSync.source.
+- **@explanation:**
+   - En el camino pone una cabecera para cada dependencia, para que en el resultado se pueda distinguir el fragmento de cada dependencia css.
+   - Las cabeceras son: **!original** con la ruta del fichero y **!order** con el número ordinal de la dependencia.
+   - También hace un reemplazo de los `@requires:fichero.css` por `!requires:fichero.css`, lo cual permite que cualquier css compilado, pueda usarse, sin problemas de recursividad, como dependencia de otro css que quiere ser compilado.
+----
+
+- **@name:** ModulerV5.CssModuler.prototype._synchronizeSource
+- **@type:** private method
+- **@parameter:** eventToSync:Object - Se usará la propiedad source:String
+- **@returns:** `Promise<void>` - Nada
+- **@description:** Sincroniza el CSS de la página con las hojas añadidas en la instancia. Se llama al método CSSStyleSheet.prototype.replace. En entornos no-navegador, usará el polifill propio, así no explote en ningún entorno.
+
+----
+
+- **@name:** ModulerV5.CssModuler.prototype._exportSource
+- **@type:** private method
+- **@parameter:**
+   - eventToSync:Object - Objeto del evento de sincronización. Se usará su propiedad source:String.
+   - options:Object - Objeto de opciones de la sincronización. Se usará su propiedad outFile:String.
+- **@returns:** `Promise<void>` - No devuelve nada concreto
+- **@description:** Método que exporta el CSS acumulado en esta instancia, a un fichero. Lo que hace es que escribe en el fichero especificado en options.outFile el código acumulado en el eventToSync.source.
+
+----
+
+- **@name:** ModulerV5.CssModuler.prototype.add
+- **@type:** class method
+- **@parameter:** input1:String - Ruta del fichero css a eliminar. Se usa el método `ModulerV5.prototype.fullpathOf` para normalizar.
+- **@returns:** this:ModulerV5.CssModuler - Devuelve la instancia propia por si se quiere hacer chaining.
+- **@asserts:** id in this.sheets - Comprueba que el id existe en this.sheets o lanza un error de aserción.
+- **@deletes:** this.sheets[id] - Elimina el fichero css del this.sheets
+- **@description:** Elimina un fichero css añadido previamente del this.sheets. No hace recursión, se elimina la hoja suelta, y esto puede producir inconsistencias. Usar con coherencia con esto, o evitar de usarlo.
+
+----
+
+- **@name:** ModulerV5.CssModuler.prototype.synchronize
+- **@type:** class method
+- **@parameter:** options:Object - Se usa la propiedad outFile:String|false, opcionalmente, si quieres exportar el css a un fichero.
+- **@returns:** `Promise<eventToSync:Object>` - Devuelve el evento de sincronización.
+- **@description:** Sincroniza el css de la página con el css de la instancia.
+- **@calls:**
+   - this._sortSheets - Primero ordena los css
+   - this._generateSource - Segundo genera el css resultante, la resolución recursiva ya se ha hecho en el `this.add`, aquí solo se recoge lo ya descargado
+   - this._synchronizeSource - Tercero sincroniza el css de la página
+   - this._exportSource - Cuarto exporta el css al fichero indicado en options.outFile, si es que se especifica.
+----
+
+- **@name:** ModulerV5.create
+- **@type:** static method
+- **@description:** Constructor que evita el `new`.
+
+----
+
+- **@name:** ModulerV5.constructor
+- **@type:** class constructor
+- **@parameter:** ...args:`Array` - Tiene varias firmas posibles.
+- **@signature:**
+   - ...args:[] - Sin parámetros. Esto resulta en: basedir, rootdir, definitions y css, todos por defecto.
+   - ...args:[String|ModulerV5|null] - Con 1 parámetro tipo String u ModulerV5 o null. Si es String, especificas el basedir y el rootdir. Si es ModulerV5, especificas los mismos basedir, rootdir, definitions y css que la instancia que le pasas.
+   - ...args:[ModulerV5,String] - Con 2 parámetros, el primero tipo ModulerV5 y el segundo tipo String. Aquí heredas los basedir, rootdir, definitions y css del ModulerV5, y con el segundo como String sobreescribes el basedir. Útil para cuando quieres usar un ModulerV5 pero que capte rutas relativas a otro directorio.
+- **@sets:**
+   - this.basedir:String - Ruta del directorio base. Se usa como base para resolver rutas relativas.
+   - this.rootdir:String - Ruta del directorio base original, el primer basedir de la cadena de herencia. Cuando heredas otro ModulerV5, esta propiedad se mantiene a través de toda la cadena de herencia. Útil para no perder el directorio raíz del proyecto a través de diferentes instancias ModulerV5.
+   - this.definitions:Object - Objeto con todas las referencias conocidas por el ModulerV5.
+   - this.css:CssModuler - Gestor de dependencias CSS. Una instancia de ModulerV5.CssModuler.
+   - this.isBrowser:Boolean - Sirve para saber rápidamente si estás en un navegador o no. Se saca de `typeof window !== "undefined"`.
+- **@defaults:**
+   - this.basedir - Por defecto, en navegador es `window.location.origin + window.location.pathname` y en node.js es `process.cwd()`.
+   - this.rootdir - Por defecto, es el this.basedir.
+   - this.definitions - Por defecto, es un objeto vacío.
+   - this.css - Por defecto, es una nueva instancia de CssModuler.
+- **@description:**
+   - Método constructor de instancias de ModulerV5. El constructor de ModulerV5 tiene una lógica un poco extensa, porque:
+   - Tiene que cubrir los casos donde se cambia el directorio base, y de esta forma puede ocuparse de las rutas relativas de forma más o menos eficiente, porque aunque es una instancia de modulador distinta:
+   - El modulador de css es el mismo objeto (porque en la herencia se transmite el mismo objeto `css` y sus cambios afectan a toda la cadena de herencia igual)
+   - El modulador de js es el mismo objeto (porque en la herencia se transmite el mismo objeto `definitions`, con lo que una nueva definición afecta también a toda la cadena de herencia)
+   - Mientras que por otro lado permite usar rutas relativas tanto para módulos css como js
+- **@note:**
+   - La herencia entre instancias ModulerV5 implica que **no es conveniente** retener instancias locales de `ModulerV5` para lógica de funciones.
+   - Es mejor usar la instancia global para esto, y así evitar retener diferentes objetos.
+   - El uso de las instancias locales se reduce a llamadas de primer nivel superficial, que te permitan usar rutas locales.
+   - Esto último, en la modulación CSS es inevitable, así que no es problema.
+   - En cuanto a JavaScript, lo que implica es que no conviene usar `LocalDictionary` dentro de funciones, porque vas a provocar retener diversas instancias ModulerV5 en la memoria del motor de V8, y aunque no sea muy crítico en principio, es una mala práctica que va a polucionar innecesariamente la memoria. De requerirlo, usar mejor la instancia global de `ModulerV5.Dictionary`, que es única en todo el programa, lo único que pierdes es la capacidad de especificar rutas relativas.
+----
+
+- **@name:** ModulerV5.inspectToString
+- **@type:** static method
+- **@parameter:**
+   - args:`Array|Arguments` - Argumentos o array con lo que quieras inspeccionar.
+   - debugLevel:Integer = 0 - Nivel de debugging. Por defecto 0. Tiene que ser entre 0, 1 y 2.
+- **@returns:** String - Representación de la inspección de los valores.
+- **@description:** Devuelve un string que explora mínimamente lo que se pasa. Da el número (L0), da el tipo (L1) o da el tipo y la stringificación (L2).
+
+----
+
+- **@name:** ModulerV5.stringify
+- **@type:** static method
+- **@parameter:** it:any - Cualquier cosa que sea stringificable por el método mismo.
+- **@returns:** String|any - Devuelve la stringificación, o si da error, el parámetro tal cual.
+- **@description:** Actualmente solo llama a JSON.stringify, no hay un método más allá de stringificación.
+
+----
+
+- **@name:** ModulerV5.prototype.isTracing
+- **@type:** class property + Boolean=false
+- **@defaults:** false - Por defecto, el traceo está desactivado.
+- **@description:** Flag para saber si se está traceando o no. Repercute a la instancia de ModulerV5.
+
+----
+
+- **@name:** ModulerV5.prototype.trace
+- **@type:** class method
+- **@parameter:**
+   - method:String - Método que estás traceando
+   - args:Array|Arguments - Lista de valores que quieres inspeccionar al tracear. Se le pasarán al `ModulerV5.inspectToString`
+- **@description:** Método de traceo. Consulta al this.isTracing para saber si debe imprimir o evitar.
+
+----
+
+- **@name:** ModulerV5.prototype.assert
+- **@type:** class method
+- **@parameter:**
+   - condition:Boolean - Condición a comprobar
+   - message:String - Mensaje del error, lanzado si la condición no se cumple.
+- **@description:** Método de aserción interno.
+
+----
+
+- **@name:** ModulerV5.prototype.normalizationOf
+- **@parameter:**
+   - subpath:String - Subruta que se quiere normalizar.
+   - debug:Boolean = false - Flag por si quieres debugar la ruta final antes de llamar al return.
+- **@returns:** String - Ruta normalizada en su versión absoluta.
+- **@supports:**
+   - Caso 1. Ruta protocolizada. Acepta `http://`, `https://`, `file://`, o cualquiera que contenga el patrón `://`. Se resuelve tal cual.
+   - Caso 2. Ruta relativa. Cuando empieza con `./`. Se resuelve prependizando el this.basedir.
+   - Caso 3. Ruta relativa al directorio superior. Cuando empieza con `../`. Se resuelve prependizando el this.basedir + "/..".
+   - Caso 4. Ruta relativa al directorio raíz. Cuando empieza con `@/`. Se resuelve prependizando el this.rootdir.
+   - Caso 5. Ruta absoluta estilo Linux. Cuando empieza con `/`. Se resuelve tal cual.
+   - Caso 6. Otros casos. Se resuelve prependizando this.basedir.
+- **@description:**
+   - Devuelve la normalización de una ruta (relativa, relativa superior, protocolizada, etc) en su representación absoluta.
+   - La idea es que el resultado de esta llamada da un identificador único para un recurso único, y siempre el mismo identificador único, de modo que si 2 rutas escritas de formas diferentes apuntan al mismo recurso, la normalización devuelve el mismo String en ambos casos.
+   - Este método soporta mútliples casos.
+   - Este método está un poco sobrecargado (lo cual no es bueno), para evitar casos raros y conductas poco predecibles.
+- **@explanation:**
+   - El método sigue varios pasos:
+   - 1. Discrimina el caso de uso, lo interpreta y obtiene las partes
+   - 2. De las partes, elimina las vacías, corrige los saltos a directorios superiores (..) o actuales (.) y neutraliza repetición de separadores (no protocolarios)
+   - 3. Vuelve a juntar las partes y elimina la barra final (a no ser que sea el root de Linux)
+   - 4. Devuelve la ruta final, imprimiéndola si se ha pedido debugar.
+----
+
+- **@name:** ModulerV5.prototype.fullpathOf
+- **@parameter:** subpath:String - Subruta de la que se quiere extraer la ruta absoluta.
+- **@returns:** String - Ruta absoluta.
+- **@description:**
+   - Retorna la ruta absoluta de una ruta relativa al this.basedir.
+   - En realidad, retorna una llamada a this.normalizationOf(subpath)
+----
+
+- **@name:** ModulerV5.prototype.relpath
+- **@parameter:** subpath:String - Subruta o ruta. Será normalizada por this.fullpathOf.
+- **@returns:** `String` - Representación de la ruta relativa al this.rootdir.
+- **@description:**
+   - Devuelve la ruta relativa al this.rootdir.
+   - La ruta devuelta siempre empieza por `@/` que es la representación del this.rootdir que usa este framework.
+----
+
+- **@name:** ModulerV5.prototype.importModule
+- **@type:** class method
+- **@parameter:**
+   - subpath:String - Subruta a importar.
+   - injection:Object = {} - Variables inyectadas en el script que se importa.
+- **@returns:** `Promise<any>` - Lo devuelto por la llamada a la factoría del módulo especificado. Esto implica a `this.readPath` y a `this._callModuleFactory`. Por el camino se usan `this.cloneForFile` y `this.normalizationOf` con el `subpath`.
+- **@description:** Este método es un wrapper de _callModuleFactory que usa this.readPath y el constructor de AsyncFunction.
+- **@explanation:**
+   - Primero hace un this.readPath del subpath para extraer el código.
+   - Segundo crea una función con el código extraído, usando el constructor AsyncFunction.
+   - En este punto, entiende estas variables en los parámetros: `\`[${Object.keys(injection).join(",")}]\`, "module", "exports", "LocalDictionary", "__filename", "__dirname"`
+   - Tercero, llama al this._callModuleFactory y retorna lo que esta devuelva.
+   - En este punto, al this._callModuleFactory le pasa estas variables: `Object.values(injection), asyncFunction, this.cloneForFile(subpath), subpath, this.normalizationOf(subpath + "/..")`
+----
+
+- **@name:** ModulerV5.prototype.readPath
+- **@parameter:** file:String - Ruta. Puede ser relativa. Acepta fichero (en node.js) o URL (en browser).
+- **@returns:** `Promise<String>` - El contenido utf8 del fichero o de la URL.
+- **@description:** Devuelve el contenido de un fichero o URL, aceptando rutas relativas.
+
+----
+
+- **@name:** ModulerV5.prototype.readUrl
+- **@parameter:** url:String - URL. Puede ser relativa.
+- **@returns:** `Promise<String>` - El contenido utf8 de la URL.
+- **@description:** Devuelve el contenido de la URL, aceptando rutas relativas.
+
+----
+
+- **@name:** ModulerV5.prototype.readFile
+- **@parameter:** file:String - Ruta a fichero. Puede ser relativa porque será pasada por this.fullpathOf.
+- **@returns:** `Promise<String>` - El contenido utf8 del fichero.
+- **@description:** Devuelve el contenido de un fichero, aceptando rutas relativas.
+
+----
+
+- **@name:** ModulerV5.prototype.knows
+- **@type:** class method
+- **@parameter:** id:String - Ruta de un módulo en this.definitions.
+- **@returns:** Boolean - Si se conoce el id o no por this.definitions.
+- **@description:** Aclara si la instancia conoce una ruta de módulo o no. Se utiliza el método this.normalizationOf con el id para normalizar la ruta, por lo cual soporta rutas relativas.
+
+----
+
+- **@name:** ModulerV5.prototype.define
+- **@parameter:** `...args:Array` - Soporta varias firmas
+- **@signature:**
+   - `...args:[factory:Function]` - Solo 1 función, que se entiende como factoría.
+   - `...args:[dependencies:Array, factory:Function]` - Función factoría precedida por array de dependencias. Las dependencias pueden ser varias cosas.
+- **@returns:**
+   - `Promise<any>` - Devuelve una promesa con lo que devuelve o exporta la factoría que se le pasa como parámetro.
+   - Devuelve lo que devolvería `this._callModuleFactory(dependencyPromises, factory)`.
+   - Teniendo en cuenta que dependencyPromises se construye mapeando `dependencies` a través de `this.mean(dependency)`.
+   - Pero hay que mirar el método `_callModuleFactory` para entender este método bien.
+   - Se mantiene separado porque ese método también se llama en el `this.mean`.
+- **@description:**
+   - Resuelve una factoría, inyectándole las dependencias especificadas.
+   - Se puede dividir en 3 pasos:
+   - 1. Validar parámetros. Se cerciora que los parámetros estén cumpliendo con alguna de las firmas antes especificadas.
+   - 2. Resolver dependencias. Esto es que se llama al `this.mean(dependency)` y se construye `dependencyPromises` como un array de promesas.
+   - 3. Resolver módulo. Esta parte consiste en llamar a `this._callModuleFactory(dependencyPromises, factory)`.
+   - En este último paso, se entiende que se devuelve una Promise.
+   - El método, sin embargo, se define como síncrono, para evitar sobrecargar de asincronicidad una función tan clave del framework.
+----
+
+- **@name:** ModulerV5.prototype.mean
+- **@parameter:** ...args:Array - Acepta diferentes firmas.
+- **@signature:**
+   - ...args:[id:String] - Acepta 1 identificador de dependencia
+   - ...args:[factory:Function] - Acepta 1 función factoría
+   - ...args:[dependencies:Array] - Acepta 1 array de dependencias. En este caso, devuelve las dependencias resueltas directamente, en formato `Promise<Array<?>>`.
+   - ...args:[dependencies:Array,factory:Function] - Acepta 1 array de dependencias seguido de 1 función factoría
+- **@returns:** `Promise<any>` - Devuelve o la resolución final de la factoría, o la resolución final de la dependencia, o la lista de resoluciones de dependencias, según el caso de los parámetros de entrada.
+- **@description:**
+   - Este método permite resolver dependencias y/o factorías de módulos al vuelo, de forma asíncrona.
+   - Sin embargo, el método de define como síncrono, para no sobrecargar de asincronía un método tan clave en el framework.
+- **@explanation:**
+   - Los pasos que sigue son:
+   - 1. Validación y formateo de parámetros. Aquí encaja los argumentos. En el caso de la firma `dependencies:Array`, retorna, ya en este paso, las promesas construidas con el mapeo de la lista de dependencies mediante this.mean(dependency).
+   - 2. Si hay una factoría, crea la `dependencyPromises` con el `this.mean(dependency)` y devuelve la llamada a `this._callModuleFactory(dependencyPromises, factory)`.
+   - 3. Si hay un id, devuelve la definition de este de haberla, y de no haberla devuelve la llamada a `this.importModule(id)`, habiendo normalizado el id con `this.normalizationOf`.
+   - En el último paso, lanza un error, porque llegados a aquí, ya se han resuelto todas las posibilidades, y la función ya debería haber hecho su return antes.
+----
+
+- **@name:** ModulerV5.prototype.cloneForFile
+- **@type:** class method
+- **@parameter:** file:String - Fichero base para la nueva instancia de ModulerV5. Interesa su directorio, pero se facilita el no tener que extraerlo.
+- **@returns:** ModulerV5 - Una nueva instancia de ModulerV5, que hereda de la actual, el this.
+- **@description:** Básicamente hace: `return ModulerV5.create(this, file + "/..")`. Puedes ir al constructor de ModulerV5 para entender qué sucede al hacer esto.
+
+----
+
+- **@name:** ModulerV5.prototype.cloneForDirectory
+- **@type:** class method
+- **@parameter:** directory:String - Directorio base para la nueva instancia de ModulerV5.
+- **@returns:** ModulerV5 - Una nueva instancia de ModulerV5, que hereda de la actual, el this.
+- **@description:** Básicamente hace: `return ModulerV5.create(this, directory)`. Puedes ir al constructor de ModulerV5 para entender qué sucede al hacer esto.
+
+----
+
+- **@name:** ModulerV5.prototype._callModuleFactory
+- **@type:** private method
+- **@parameter:**
+   - `dependencyPromises:Array<Promise>` - Dependencias a inyectar en el factory.
+   - `factory:Function` - Función factoría. A continuación se explicará la firma que sigue.
+   - `submoduler:ModulerV5=null` - Instancia de ModulerV5 que quieres inyectar en la factoría. Puede ser distinta de la instancia actual, para conseguir una resolución de rutas relativas personalizada en el caso concreto.
+   - `filename:String=null` - Fichero de la llamada. Se inyecta por conveniencia.
+   - `dirname:String=null` - Directorio de la llamada. Se inyecta por conveniencia.
+- **@returns:**
+   - `Promise<any>` - Devuelve lo que la factoría devuelve al llamarse, en este orden:
+   - 1. Si el filename termina con `.css`, devuelve lo que devuelve `this.css.add(filename)`.
+   - 2. Lo que devuelve la factoría con `return`, si no es `undefined`.
+   - 3. Lo que exporta la factoría con `module.exports` o con `export.<prop>`, si con `return` no devuelve nada o `undefined`.
+- **@description:**
+   - Método que permite resolver módulos JavaScript y CSS.
+   - Se utiliza para resolver cualquiera de los 2 tipos de módulos.
+   - Es de uso interno, pero hay que saber cómo funciona para usar correctamente los métodos `define` y `mean`.
+   - El método se define como síncrono aunque se entiende que devuelve una Promise.
+   - Se hace así para evitar sobrecargar de asincronicidad una función tan clave en el framework.
+----
+
+- **@name:** ModulerV5.Dictionary
+- **@type:** ModulerV5
+- **@description:**
+   - Instancia global de ModulerV5. Tienes una referencia global para todo el programa aquí, así evitas duplicidades y otros inconvenientes.
+   - Utiliza los parámetros por defecto.
+----
+
+- **@name:** Promise.fromObject
+- **@type:** static method
+- **@parameter:** obj:Object - Objeto con las Promise.
+- **@description:** Hace lo mismo que Promise.all pero en lugar de usar y devolver un Array, usa y devuelve un Object. Es un polyfill.
+
+----
+
 **{@root}/dev-toolkit/dev-toolkit.dist.js**
 
 ----

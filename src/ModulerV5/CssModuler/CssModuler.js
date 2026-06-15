@@ -1,4 +1,9 @@
-class CssModuler {
+/**
+ * @name ModulerV5.CssModuler
+ * @type class
+ * @description Clase encargada de gestionar la modulación en runtime de ficheros y sincronización en runtime de estilos CSS
+ */
+static CssModuler = class CssModuler {
   /*<$=await include("./create.js")$>*/
   /*<$=await include("./fakeCssStyleSheet.js")$>*/
   /*<$=await include("./symbols.js")$>*/

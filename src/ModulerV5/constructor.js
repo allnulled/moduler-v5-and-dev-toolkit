@@ -1,3 +1,30 @@
+/**
+ * @name ModulerV5.constructor
+ * @type class constructor
+ * @parameter ...args:`Array` - Tiene varias firmas posibles.
+ * @signature ...args:[] - Sin parámetros. Esto resulta en: basedir, rootdir, definitions y css, todos por defecto.
+ * @signature ...args:[String|ModulerV5|null] - Con 1 parámetro tipo String u ModulerV5 o null. Si es String, especificas el basedir y el rootdir. Si es ModulerV5, especificas los mismos basedir, rootdir, definitions y css que la instancia que le pasas.
+ * @signature ...args:[ModulerV5,String] - Con 2 parámetros, el primero tipo ModulerV5 y el segundo tipo String. Aquí heredas los basedir, rootdir, definitions y css del ModulerV5, y con el segundo como String sobreescribes el basedir. Útil para cuando quieres usar un ModulerV5 pero que capte rutas relativas a otro directorio.
+ * @sets this.basedir:String - Ruta del directorio base. Se usa como base para resolver rutas relativas.
+ * @sets this.rootdir:String - Ruta del directorio base original, el primer basedir de la cadena de herencia. Cuando heredas otro ModulerV5, esta propiedad se mantiene a través de toda la cadena de herencia. Útil para no perder el directorio raíz del proyecto a través de diferentes instancias ModulerV5.
+ * @sets this.definitions:Object - Objeto con todas las referencias conocidas por el ModulerV5.
+ * @sets this.css:CssModuler - Gestor de dependencias CSS. Una instancia de ModulerV5.CssModuler.
+ * @sets this.isBrowser:Boolean - Sirve para saber rápidamente si estás en un navegador o no. Se saca de `typeof window !== "undefined"`.
+ * @defaults this.basedir - Por defecto, en navegador es `window.location.origin + window.location.pathname` y en node.js es `process.cwd()`.
+ * @defaults this.rootdir - Por defecto, es el this.basedir.
+ * @defaults this.definitions - Por defecto, es un objeto vacío.
+ * @defaults this.css - Por defecto, es una nueva instancia de CssModuler.
+ * @description Método constructor de instancias de ModulerV5. El constructor de ModulerV5 tiene una lógica un poco extensa, porque:
+ * @description Tiene que cubrir los casos donde se cambia el directorio base, y de esta forma puede ocuparse de las rutas relativas de forma más o menos eficiente, porque aunque es una instancia de modulador distinta:
+ * @description El modulador de css es el mismo objeto (porque en la herencia se transmite el mismo objeto `css` y sus cambios afectan a toda la cadena de herencia igual)
+ * @description El modulador de js es el mismo objeto (porque en la herencia se transmite el mismo objeto `definitions`, con lo que una nueva definición afecta también a toda la cadena de herencia)
+ * @description Mientras que por otro lado permite usar rutas relativas tanto para módulos css como js
+ * @note La herencia entre instancias ModulerV5 implica que **no es conveniente** retener instancias locales de `ModulerV5` para lógica de funciones.
+ * @note Es mejor usar la instancia global para esto, y así evitar retener diferentes objetos.
+ * @note El uso de las instancias locales se reduce a llamadas de primer nivel superficial, que te permitan usar rutas locales.
+ * @note Esto último, en la modulación CSS es inevitable, así que no es problema.
+ * @note En cuanto a JavaScript, lo que implica es que no conviene usar `LocalDictionary` dentro de funciones, porque vas a provocar retener diversas instancias ModulerV5 en la memoria del motor de V8, y aunque no sea muy crítico en principio, es una mala práctica que va a polucionar innecesariamente la memoria. De requerirlo, usar mejor la instancia global de `ModulerV5.Dictionary`, que es única en todo el programa, lo único que pierdes es la capacidad de especificar rutas relativas.
+ */
 constructor(...args) {
   this.isBrowser = typeof window !== "undefined";
   let input1 = null;
