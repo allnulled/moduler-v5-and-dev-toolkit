@@ -102,13 +102,10 @@ module.exports = async function (...args) {
       const expectedOutput = ""+
 `/*!original:@/src/tmp/test2.css*/
 /*!order:1*/
-html{background:black}
-
+html{background:black}\n
 /*!original:@/src/tmp/test.entry.css*/
 /*!order:2*/
-/*!requires:./test2.css*/
-
-`;
+/*!requires:./test2.css*/\n\n`;
       assertFileExists(`${targetDirectory}/dist/tmp/test.dist.css`, "Can use buildCss and works as expected (point 2)");
       assertFileContents(`${targetDirectory}/dist/tmp/test.dist.css`, expectedOutput, "Can use buildCss and works as expected (point 3)");
       // @TODO: el test del método

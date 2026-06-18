@@ -6,5 +6,5 @@
  * @description Construye una instancia.
  */
 constructor(toolkit) {
-  this.toolkit = toolkit;
+  /*<$=await include("./prototype.toolkit.js")$>*/
 }

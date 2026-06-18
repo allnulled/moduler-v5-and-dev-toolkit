@@ -1,5 +1,35 @@
 ----
 
+**{@root}/DevToolkit/prototype.testing.js**
+
+----
+
+- **@name:** DevToolkit.prototype.testing
+- **@type:** class property + DevToolkit.Testing
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.Testing para esta instancia de DevToolkit.
+   - Se utiliza para poder crear asertores (DevToolkit.Testing.Asserter)
+   - No se hace un gran uso de esta instancia, pero por razones de provisionamiento anticipado, ya se adjunta también al DevToolkit una instancia de esta clase.
+   - Para saber más, puedes ir a la clase DevToolkit.Testing
+----
+
+**{@root}/DevToolkit/prototype.templating.js**
+
+----
+
+- **@name:** DevToolkit.prototype.templating
+- **@type:** class property + DevToolkit.Templating
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.Templating para esta instancia de DevToolkit.
+   - Se utiliza para la compilación de JavaScript, que corre a cargo de la librería [Tjs](https://github.com/allnulled/templated-js) (Templated-JavaScript) que se incluye en las instancias de DevToolkit.Templating.
+   - Aunque la clase ya está dotada de métodos para la compilación, la instancia se inicializa con el this.basedir de la instancia DevToolkit, lo cual permite resolver rutas relativas.
+   - Para saber más, puedes ir a la clase DevToolkit.Templating
+----
+
 **{@root}/DevToolkit/prototype.subpathOf.js**
 
 ----
@@ -13,6 +43,44 @@
 
 ----
 
+**{@root}/DevToolkit/prototype.semaphore.js**
+
+----
+
+- **@name:** DevToolkit.prototype.semaphore
+- **@type:** class property + DevToolkit.Semaphore
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de Semaphore para esta instancia de DevToolkit.
+   - Su razón de ser es que los eventos del development-time, si se inician por manipulación de ficheros, se van a acumular.
+   - Esta acumulación requiere de discriminar el evento original, triggeado por el desarrollador al guardar un fichero, y los eventos subsiguientes, encargados de hacer compilaciones o cambios de cualquier otro tipo.
+   - Esta instancia sirve principalmente para gestionar esa diferencia en el origen del evento que lanza la observación de los ficheros.
+   - Para saber más, puedes ir a la clase DevToolkit.Semaphore
+----
+
+**{@root}/DevToolkit/prototype.moduler.js**
+
+----
+
+- **@name:** DevToolkit.prototype.moduler
+- **@type:** class property + DevToolkit.ModulerV5
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de ModulerV5 para esta instancia de DevToolkit.
+   - Esta instancia se introduce en el framework por la necesidad de compilar el CSS en development-time / compilation-time.
+   - Principalmente, para reaprovechar la lógica del CssModuler.
+   - Y concretamente, para habilitar la gestión de rutas relativas desde los `@requires:` de los fichero css.
+   - Igual más adelante tiene más razones/dependencia lógica, pero en su origen, la razón es esta.
+   - Aunque parezca excesivo arrastrar toda la API de ModulerV5 por esta razón, hay que tener en cuenta que:
+   - 1. DevToolkit se utiliza en development-time, no en run-time, por lo cual la performance es un poco menos crítica.
+   - 2. Es la forma más razonable de reaprovechar el código ya escrito en ModulerV5 que interesa en el development-time
+   - 3. Lo único que no es óptimo aquí es arrastrar la lógica de modulación en run-time del JavaScript. Pero tampoco está de más, y puede serte útil también tener modulación en development-time, simplemente que el framework de DevToolkit no la explota directamente porque ya centraliza todas las utilidades base.
+   - 4. Al ir avanzando en el desarrollo, será cuestión de tiempo querer arrastrar el framework de ModulerV5 también en el development-time: la compactación del CSS ha sido la primera necesidad, pero con el tiempo no sería la única.
+   - Para saber más, puedes ir a la clase DevToolkit.ModulerV5.
+----
+
 **{@root}/DevToolkit/prototype.fullpathOf.js**
 
 ----
@@ -23,6 +91,91 @@
 - **@returns:** String - ruta completa resultante. 
 - **@description:** Reconstruye la ruta completa a partir de una ruta relativa. Utiliza `path.resolve` con el `this.basedir`.
 
+----
+
+**{@root}/DevToolkit/prototype.fileSystem.js**
+
+----
+
+- **@name:** DevToolkit.prototype.fileSystem
+- **@type:** class property + DevToolkit.FileSystem
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.FileSystem para esta instancia de DevToolkit.
+   - Contiene utilidades propias de la interacción con el sistema de ficheros.
+   - A diferencia de los métodos estáticos de DevToolkit.FileSystem, este objeto sí conoce la ruta base de la instancia de DevToolkit, lo cual puede ser útil para especificar rutas sobreentendiendo la raíz de estas.
+   - Para saber más, puedes ir a la clase DevToolkit.FileSystem.
+----
+
+**{@root}/DevToolkit/prototype.events.js**
+
+----
+
+- **@name:** DevToolkit.prototype.events
+- **@type:** class property + DevToolkit.Events
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.Events para esta instancia de DevToolkit.
+   - Contiene utilidades y datos para gestión de los eventos producidos en el development-time/compilation-time.
+   - Para saber más, puedes ir a la clase DevToolkit.Events.
+----
+
+**{@root}/DevToolkit/prototype.documentator.js**
+
+----
+
+- **@name:** DevToolkit.prototype.documentator
+- **@type:** class property + DevToolkit.Documentator
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.Documentator para esta instancia de DevToolkit.
+   - Contiene utilidades y datos para la extracción y generación de documentación.
+   - Para saber más, puedes ir a la clase DevToolkit.Documentator.
+----
+
+**{@root}/DevToolkit/prototype.cli.js**
+
+----
+
+- **@name:** DevToolkit.prototype.cli
+- **@type:** class property + DevToolkit.CommandLine
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Instancia de DevToolkit.CommandLine para esta instancia de DevToolkit.
+   - Contiene utilidades y datos para interactuar fácilmente con la command-line del sistema operativo huésped.
+   - Para saber más, puedes ir a la clase DevToolkit.CommandLine.
+----
+
+**{@root}/DevToolkit/prototype.basedir.js**
+
+----
+
+- **@name:** DevToolkit.prototype.basedir
+- **@type:** class property + String
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Propiedad que indica el directorio base de la instancia DevToolkit actual.
+   - Sirve para poder resolver rutas relativas en métodos de la instancia (no estáticos, la clase no conoce este valor)
+   - DevToolkit, a diferencia de ModulerV5, no juega con subinstancias clon, así que aquí no hay un this.rootdir.
+----
+
+**{@root}/DevToolkit/prototype.assert.js**
+
+----
+
+- **@name:** DevToolkit.prototype.assert
+- **@type:** class method + Function
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:**
+   - Método assert propio de la clase.
+   - Se saca de `this.constructor.Testing.Asserter.createAssert().assert`
+   - Para saber su firma puedes mirar DevToolkit.Testing.Asserter.createAssert, y del objeto que saca, el método `assert`.
 ----
 
 **{@root}/DevToolkit/create.js**
@@ -496,16 +649,6 @@
    - Utiliza los parámetros por defecto. Por lo cual, es instancia original, no clonada.
 ----
 
-**{@root}/DevToolkit/Utils/Utils.js**
-
-----
-
-- **@name:** DevToolkit.Utils
-- **@type:** class
-- **@description:** Clase con utilidades que no encajan en otro dominio.
-
-----
-
 **{@root}/DevToolkit/Tracer/stringify.js**
 
 ----
@@ -554,6 +697,16 @@
 
 ----
 
+**{@root}/DevToolkit/Utils/Utils.js**
+
+----
+
+- **@name:** DevToolkit.Utils
+- **@type:** class
+- **@description:** Clase con utilidades que no encajan en otro dominio.
+
+----
+
 **{@root}/DevToolkit/Time/Time.js**
 
 ----
@@ -562,6 +715,18 @@
 - **@type:** class
 - **@description:** Clase con utilidades para tiempo.
 
+
+----
+
+**{@root}/DevToolkit/Testing/constructor.js**
+
+----
+
+- **@name:** DevToolkit.Testing.constructor
+- **@type:** class constructor
+- **@parameter:** toolkit:DevToolkit - Instancia de DevToolkit que origina esta instancia de Testing.
+- **@sets:** this.toolkit:DevToolkit
+- **@description:** Constructor de la clase Testing.
 
 ----
 
@@ -609,6 +774,17 @@
 
 ----
 
+**{@root}/DevToolkit/Semaphore/prototype.toolkit.js**
+
+----
+
+- **@name:** DevToolkit.Semaphore.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este Semaphore
+   - Para ver más, consultar la clase DevToolkit
+----
+
 **{@root}/DevToolkit/Semaphore/prototype.setFilename.js**
 
 ----
@@ -639,6 +815,18 @@
 - **@type:** class method
 - **@returns:** String - Ruta completa del fichero semáforo.
 - **@description:** Devuelve la ruta completa del fichero usado como semáforo.
+
+----
+
+**{@root}/DevToolkit/Semaphore/prototype.filename.js**
+
+----
+
+- **@name:** DevToolkit.Semaphore.prototype.filename
+- **@type:** class property + String
+- **@not-prototype:** 
+- **@in-constructor:** 
+- **@description:** Propiedad que indica el nombre (no ruta completa) del fichero que se utiliza para la marca persistida en el sistema de ficheros del semáforo actual.
 
 ----
 
@@ -849,6 +1037,17 @@
 - **@description:** Crea un directorio con fs.promises.mkdir
 - **@differences:** Admite rutas relativas al `this.toolkit.basedir`, no como su homólogo estático.
 
+----
+
+**{@root}/DevToolkit/FileSystem/prototype.toolkit.js**
+
+----
+
+- **@name:** DevToolkit.FileSystem.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este FileSystem
+   - Para ver más, consultar la clase DevToolkit
 ----
 
 **{@root}/DevToolkit/FileSystem/prototype.sizeOf.js**
@@ -1138,6 +1337,17 @@
 
 ----
 
+**{@root}/DevToolkit/Events/prototype.toolkit.js**
+
+----
+
+- **@name:** DevToolkit.Events.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este Events
+   - Para ver más, consultar la clase DevToolkit
+----
+
 **{@root}/DevToolkit/Events/prototype.propagateOnTouch.js**
 
 ----
@@ -1182,6 +1392,17 @@
 - **@type:** Object
 - **@description:** Tiene varias expresiones regulares que interesan para capturar y limpiar los comentarios javadoc.
 
+----
+
+**{@root}/DevToolkit/Documentator/prototype.toolkit.js**
+
+----
+
+- **@name:** DevToolkit.Documentator.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este Documentator
+   - Para ver más, consultar la clase DevToolkit
 ----
 
 **{@root}/DevToolkit/Documentator/prototype.extractJavadocTextFromDirectory.js**
@@ -1238,6 +1459,18 @@
 
 ----
 
+**{@root}/DevToolkit/Documentator/constructor.js**
+
+----
+
+- **@name:** DevToolkit.Documentator.constructor
+- **@type:** class constructor
+- **@parameter:** toolkit:DevToolkit - Instancia de DevToolkit que origina este Documentator.
+- **@sets:** this.toolkit:DevToolkit
+- **@description:** Constructor del Documentator.
+
+----
+
 **{@root}/DevToolkit/Documentator/Documentator.js**
 
 ----
@@ -1266,129 +1499,6 @@
 - **@name:** DevToolkit.Debug
 - **@type:** class
 - **@description:** Utilidades para el debugging de DevToolkit
-
-----
-
-**{@root}/DevToolkit/CommandLine/prototype.tools.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.tools
-- **@type:** class property + DevToolkit.CommandLine.Tools
-- **@description:**
-   - Instancia DevToolkit.CommandLine.Tools, el kit de herramientas para línea de comandos incluidas por defecto en el DevToolkit.CommandLine
-   - Para ver más, consultar la clase DevToolkit.CommandLine.Tools
-----
-
-**{@root}/DevToolkit/CommandLine/prototype.toolkit.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.toolkit
-- **@type:** class property + DevToolkit
-- **@description:**
-   - Instancia DevToolkit que creó este CommandLine
-   - Para ver más, consultar la clase DevToolkit
-----
-
-**{@root}/DevToolkit/CommandLine/prototype.tool.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.tool
-- **@type:** class method
-- **@parameter:** args:`Array<String>`- Indica la herramienta. Permite niveles. Cada nivel es concatenado con el caracter `/`, que luego es normalizado por `DevToolkit.prototype.fullpathOf`. Este parámetro pueden ser los `process.argv` que buscará donde terminan los argumentos posicionales y los tomará desde ahí automáticamente.
-- **@returns:** any - Lo que devuelva la herramienta llamada.
-- **@description:** Llama a la herramienta que esté guardada dentro de la raíz del proyecto, en `dev/cli/tool/{args.join("/")}
-
-----
-
-**{@root}/DevToolkit/CommandLine/prototype.findProjectRoot.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.findProjectRoot
-- **@type:** class method
-- **@parameter:**
-   - fromDirectory:String = process.cwd() - Directorio desde el que quieres iniciar la búsqueda
-   - file:String = "package.json" - Nombre del fichero que se usará para encontrar el directorio raíz del proyecto
-- **@throws:** Error - Lanzará un error de "project root not found by file ${file}"
-- **@returns:** `Promise<String>` - Directorio considerado raíz del proyecto
-- **@description:**
-   - Buscará desde el directorio `fromDirectory:String` hacia arriba el primer directorio que encuentre el fichero `file:String`.
-   - De no encontrarse y llegar a la raíz del sistema operativo, lanzará un error.
-----
-
-**{@root}/DevToolkit/CommandLine/prototype.createProject.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.createProject
-- **@type:** class method
-- **@returns:** true - Si todo ha ido bien.
-- **@description:** Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
-
-----
-
-**{@root}/DevToolkit/CommandLine/printError.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.printError
-- **@parameter:** error:Error - Instancia de la clase Error que se quiere imprimir.
-- **@description:** Imprime un error pero bonitamente, con colores.
-
-----
-
-**{@root}/DevToolkit/CommandLine/create.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.create
-- **@type:** static method
-- **@description:** Constructor que evita el new.
-
-----
-
-**{@root}/DevToolkit/CommandLine/constructor.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.constructor
-- **@type:** class constructor
-- **@parameter:** toolkit:DevToolkit - Instancia de DevToolkit para esta clase.
-- **@sets:** this.toolkit a partir del parámetro proporcionado.
-- **@description:** Construye la instancia de DevToolkit.CommandLine
-
-----
-
-**{@root}/DevToolkit/CommandLine/baseProject.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.baseProject
-- **@type:** Object
-- **@description:** Este objeto contiene el esqueleto de un proyecto nuevo que utilizará `DevToolkit` y `ModulerV5`. Tiene la estructura de carpetas y ficheros con su contenido necesarios para ello.
-
-----
-
-**{@root}/DevToolkit/CommandLine/CommandLine.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine
-- **@type:** class
-- **@description:** Clase con utilidades para la interfaz de línea de comandos de DevToolkit
-
-----
-
-**{@root}/DevToolkit/CommandLine/Colors.js**
-
-----
-
-- **@name:** DevToolkit.CommandLine.Colors
-- **@type:** class
-- **@description:** Clase con utilidades para pintar colores por consola, tablas, cajas, y cosas así. Esta clase se saca de `require(__dirname + "/refrescador.api.dist.js").colors`. Por lo cual, se sobreentiende que `dev-toolkit.dist.js` tiene que estar acompañado de este fichero.
 
 ----
 
@@ -1611,6 +1721,129 @@
 
 ----
 
+**{@root}/DevToolkit/CommandLine/prototype.tools.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.tools
+- **@type:** class property + DevToolkit.CommandLine.Tools
+- **@description:**
+   - Instancia DevToolkit.CommandLine.Tools, el kit de herramientas para línea de comandos incluidas por defecto en el DevToolkit.CommandLine
+   - Para ver más, consultar la clase DevToolkit.CommandLine.Tools
+----
+
+**{@root}/DevToolkit/CommandLine/prototype.toolkit.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este CommandLine
+   - Para ver más, consultar la clase DevToolkit
+----
+
+**{@root}/DevToolkit/CommandLine/prototype.tool.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.tool
+- **@type:** class method
+- **@parameter:** args:`Array<String>`- Indica la herramienta. Permite niveles. Cada nivel es concatenado con el caracter `/`, que luego es normalizado por `DevToolkit.prototype.fullpathOf`. Este parámetro pueden ser los `process.argv` que buscará donde terminan los argumentos posicionales y los tomará desde ahí automáticamente.
+- **@returns:** any - Lo que devuelva la herramienta llamada.
+- **@description:** Llama a la herramienta que esté guardada dentro de la raíz del proyecto, en `dev/cli/tool/{args.join("/")}
+
+----
+
+**{@root}/DevToolkit/CommandLine/prototype.findProjectRoot.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.findProjectRoot
+- **@type:** class method
+- **@parameter:**
+   - fromDirectory:String = process.cwd() - Directorio desde el que quieres iniciar la búsqueda
+   - file:String = "package.json" - Nombre del fichero que se usará para encontrar el directorio raíz del proyecto
+- **@throws:** Error - Lanzará un error de "project root not found by file ${file}"
+- **@returns:** `Promise<String>` - Directorio considerado raíz del proyecto
+- **@description:**
+   - Buscará desde el directorio `fromDirectory:String` hacia arriba el primer directorio que encuentre el fichero `file:String`.
+   - De no encontrarse y llegar a la raíz del sistema operativo, lanzará un error.
+----
+
+**{@root}/DevToolkit/CommandLine/prototype.createProject.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.createProject
+- **@type:** class method
+- **@returns:** true - Si todo ha ido bien.
+- **@description:** Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
+
+----
+
+**{@root}/DevToolkit/CommandLine/printError.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.printError
+- **@parameter:** error:Error - Instancia de la clase Error que se quiere imprimir.
+- **@description:** Imprime un error pero bonitamente, con colores.
+
+----
+
+**{@root}/DevToolkit/CommandLine/create.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.create
+- **@type:** static method
+- **@description:** Constructor que evita el new.
+
+----
+
+**{@root}/DevToolkit/CommandLine/constructor.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.constructor
+- **@type:** class constructor
+- **@parameter:** toolkit:DevToolkit - Instancia de DevToolkit para esta clase.
+- **@sets:** this.toolkit a partir del parámetro proporcionado.
+- **@description:** Construye la instancia de DevToolkit.CommandLine
+
+----
+
+**{@root}/DevToolkit/CommandLine/baseProject.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.baseProject
+- **@type:** Object
+- **@description:** Este objeto contiene el esqueleto de un proyecto nuevo que utilizará `DevToolkit` y `ModulerV5`. Tiene la estructura de carpetas y ficheros con su contenido necesarios para ello.
+
+----
+
+**{@root}/DevToolkit/CommandLine/CommandLine.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine
+- **@type:** class
+- **@description:** Clase con utilidades para la interfaz de línea de comandos de DevToolkit
+
+----
+
+**{@root}/DevToolkit/CommandLine/Colors.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.Colors
+- **@type:** class
+- **@description:** Clase con utilidades para pintar colores por consola, tablas, cajas, y cosas así. Esta clase se saca de `require(__dirname + "/refrescador.api.dist.js").colors`. Por lo cual, se sobreentiende que `dev-toolkit.dist.js` tiene que estar acompañado de este fichero.
+
+----
+
 **{@root}/DevToolkit/Testing/Asserter/AssertionError.js**
 
 ----
@@ -1720,6 +1953,18 @@
 - **@name:** DevToolkit.CommandLine.Tools.create
 - **@type:** static method
 - **@description:** Constructor que evita el new.
+
+----
+
+**{@root}/DevToolkit/CommandLine/Tools/constructor.js**
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.constructor
+- **@type:** class constructor
+- **@parameter:** commandLine:DevToolkit.CommandLine - Instancia de DevToolkit.CommandLine para esta clase.
+- **@sets:** this.toolkit a partir del parámetro proporcionado. Nótese que se pasa la instancia de CommandLine como parámetro del método, pero se fija su propiedad `toolkit` como propiedad. Si necesitas acceder a la cli, puedes hacer `this.toolkit.cli`, pero se hace por homogeneizar con todas las otras instancias de clase que se derivan del DevToolkit, aunque se encuentre dentro de la instancia `toolkit.cli.tools` (segundo nivel desde toolkit).
+- **@description:** Construye la instancia de DevToolkit.CommandLine.Tools
 
 ----
 

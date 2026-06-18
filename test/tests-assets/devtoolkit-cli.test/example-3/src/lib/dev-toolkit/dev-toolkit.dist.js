@@ -158,7 +158,20 @@
      * @description Utilidades para documentación de DevToolkit
      */
     static Documentator = class Documentator {
+      /**
+       * @name DevToolkit.Documentator.constructor
+       * @type class constructor
+       * @parameter toolkit:DevToolkit - Instancia de DevToolkit que origina este Documentator.
+       * @sets this.toolkit:DevToolkit
+       * @description Constructor del Documentator.
+       */
       constructor(toolkit) {
+        /**
+         * @name DevToolkit.Documentator.prototype.toolkit
+         * @type class property + DevToolkit
+         * @description Instancia DevToolkit que creó este Documentator
+         * @description Para ver más, consultar la clase DevToolkit
+         */
         this.toolkit = toolkit;
       }
       /**
@@ -417,6 +430,13 @@
         static create(...args) {
           return new this(...args);
         }
+        /**
+         * @name DevToolkit.CommandLine.Tools.constructor
+         * @type class constructor
+         * @parameter commandLine:DevToolkit.CommandLine - Instancia de DevToolkit.CommandLine para esta clase.
+         * @sets this.toolkit a partir del parámetro proporcionado. Nótese que se pasa la instancia de CommandLine como parámetro del método, pero se fija su propiedad `toolkit` como propiedad. Si necesitas acceder a la cli, puedes hacer `this.toolkit.cli`, pero se hace por homogeneizar con todas las otras instancias de clase que se derivan del DevToolkit, aunque se encuentre dentro de la instancia `toolkit.cli.tools` (segundo nivel desde toolkit).
+         * @description Construye la instancia de DevToolkit.CommandLine.Tools
+         */
         constructor(commandLine) {
           /**
            * @name DevToolkit.CommandLine.Tools.prototype.toolkit
@@ -740,6 +760,13 @@
           });
         }
       }
+      /**
+       * @name DevToolkit.Testing.constructor
+       * @type class constructor
+       * @parameter toolkit:DevToolkit - Instancia de DevToolkit que origina esta instancia de Testing.
+       * @sets this.toolkit:DevToolkit
+       * @description Constructor de la clase Testing.
+       */
       constructor(toolkit) {
         this.toolkit = toolkit;
       }
@@ -761,6 +788,12 @@
        * @description Construye una instancia.
        */
       constructor(toolkit) {
+        /**
+         * @name DevToolkit.Events.prototype.toolkit
+         * @type class property + DevToolkit
+         * @description Instancia DevToolkit que creó este Events
+         * @description Para ver más, consultar la clase DevToolkit
+         */
         this.toolkit = toolkit;
       }
       /**
@@ -860,7 +893,20 @@
        * @description Construye una instancia.
        */
       constructor(toolkit, filename = "semaphore.main.txt") {
+        /**
+         * @name DevToolkit.Semaphore.prototype.toolkit
+         * @type class property + DevToolkit
+         * @description Instancia DevToolkit que creó este Semaphore
+         * @description Para ver más, consultar la clase DevToolkit
+         */
         this.toolkit = toolkit;
+        /**
+         * @name DevToolkit.Semaphore.prototype.filename
+         * @type class property + String
+         * @not-prototype
+         * @in-constructor
+         * @description Propiedad que indica el nombre (no ruta completa) del fichero que se utiliza para la marca persistida en el sistema de ficheros del semáforo actual.
+         */
         this.filename = filename;
       }
       /**
@@ -1184,6 +1230,12 @@
        * @description Construye una instancia.
        */
       constructor(toolkit) {
+        /**
+         * @name DevToolkit.FileSystem.prototype.toolkit
+         * @type class property + DevToolkit
+         * @description Instancia DevToolkit que creó este FileSystem
+         * @description Para ver más, consultar la clase DevToolkit
+         */
         this.toolkit = toolkit;
       }
       /**
@@ -2186,15 +2238,118 @@
      * @description En la construcción de DevToolkit se establecen las propiedades. En general, lo que consigues creando estas instancias es facilitar que los métodos de ellas conozcan la ruta raíz del proyecto, y así no tener que estar combinándolas con `DevToolkit.prototype.fullpathOf` manualmente en cada caso.
      */
     constructor(basedir = process.cwd()) {
+      /**
+       * @name DevToolkit.prototype.basedir
+       * @type class property + String
+       * @not-prototype
+       * @in-constructor
+       * @description Propiedad que indica el directorio base de la instancia DevToolkit actual. 
+       * @description Sirve para poder resolver rutas relativas en métodos de la instancia (no estáticos, la clase no conoce este valor)
+       * @description DevToolkit, a diferencia de ModulerV5, no juega con subinstancias clon, así que aquí no hay un this.rootdir.
+       */
       this.basedir = require("path").resolve(basedir);
+      /**
+       * @name DevToolkit.prototype.fileSystem
+       * @type class property + DevToolkit.FileSystem
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.FileSystem para esta instancia de DevToolkit.
+       * @description Contiene utilidades propias de la interacción con el sistema de ficheros.
+       * @description A diferencia de los métodos estáticos de DevToolkit.FileSystem, este objeto sí conoce la ruta base de la instancia de DevToolkit, lo cual puede ser útil para especificar rutas sobreentendiendo la raíz de estas.
+       * @description Para saber más, puedes ir a la clase DevToolkit.FileSystem.
+       */
       this.fileSystem = new this.constructor.FileSystem(this);
+      /**
+       * @name DevToolkit.prototype.cli
+       * @type class property + DevToolkit.CommandLine
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.CommandLine para esta instancia de DevToolkit.
+       * @description Contiene utilidades y datos para interactuar fácilmente con la command-line del sistema operativo huésped.
+       * @description Para saber más, puedes ir a la clase DevToolkit.CommandLine.
+       */
       this.cli = new this.constructor.CommandLine(this);
+      /**
+       * @name DevToolkit.prototype.documentator
+       * @type class property + DevToolkit.Documentator
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.Documentator para esta instancia de DevToolkit.
+       * @description Contiene utilidades y datos para la extracción y generación de documentación.
+       * @description Para saber más, puedes ir a la clase DevToolkit.Documentator.
+       */
       this.documentator = new this.constructor.Documentator(this);
+      /**
+       * @name DevToolkit.prototype.testing
+       * @type class property + DevToolkit.Testing
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.Testing para esta instancia de DevToolkit.
+       * @description Se utiliza para poder crear asertores (DevToolkit.Testing.Asserter)
+       * @description No se hace un gran uso de esta instancia, pero por razones de provisionamiento anticipado, ya se adjunta también al DevToolkit una instancia de esta clase.
+       * @description Para saber más, puedes ir a la clase DevToolkit.Testing
+       */
       this.testing = new this.constructor.Testing(this);
+      /**
+       * @name DevToolkit.prototype.templating
+       * @type class property + DevToolkit.Templating
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.Templating para esta instancia de DevToolkit.
+       * @description Se utiliza para la compilación de JavaScript, que corre a cargo de la librería [Tjs](https://github.com/allnulled/templated-js) (Templated-JavaScript) que se incluye en las instancias de DevToolkit.Templating.
+       * @description Aunque la clase ya está dotada de métodos para la compilación, la instancia se inicializa con el this.basedir de la instancia DevToolkit, lo cual permite resolver rutas relativas.
+       * @description Para saber más, puedes ir a la clase DevToolkit.Templating
+       */
       this.templating = new this.constructor.Templating(this);
+      /**
+       * @name DevToolkit.prototype.events
+       * @type class property + DevToolkit.Events
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de DevToolkit.Events para esta instancia de DevToolkit.
+       * @description Contiene utilidades y datos para gestión de los eventos producidos en el development-time/compilation-time.
+       * @description Para saber más, puedes ir a la clase DevToolkit.Events.
+       */
       this.events = new this.constructor.Events(this);
+      /**
+       * @name DevToolkit.prototype.semaphore
+       * @type class property + DevToolkit.Semaphore
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de Semaphore para esta instancia de DevToolkit.
+       * @description Su razón de ser es que los eventos del development-time, si se inician por manipulación de ficheros, se van a acumular.
+       * @description Esta acumulación requiere de discriminar el evento original, triggeado por el desarrollador al guardar un fichero, y los eventos subsiguientes, encargados de hacer compilaciones o cambios de cualquier otro tipo.
+       * @description Esta instancia sirve principalmente para gestionar esa diferencia en el origen del evento que lanza la observación de los ficheros.
+       * @description Para saber más, puedes ir a la clase DevToolkit.Semaphore
+       */
       this.semaphore = new this.constructor.Semaphore(this, "semaphore.dev-toolkit.txt");
+      /**
+       * @name DevToolkit.prototype.assert
+       * @type class method + Function
+       * @not-prototype
+       * @in-constructor
+       * @description Método assert propio de la clase.
+       * @description Se saca de `this.constructor.Testing.Asserter.createAssert().assert`
+       * @description Para saber su firma puedes mirar DevToolkit.Testing.Asserter.createAssert, y del objeto que saca, el método `assert`.
+       */
       this.assert = this.constructor.Testing.Asserter.createAssert().assert;
+      /**
+       * @name DevToolkit.prototype.moduler
+       * @type class property + DevToolkit.ModulerV5
+       * @not-prototype
+       * @in-constructor
+       * @description Instancia de ModulerV5 para esta instancia de DevToolkit.
+       * @description Esta instancia se introduce en el framework por la necesidad de compilar el CSS en development-time / compilation-time.
+       * @description Principalmente, para reaprovechar la lógica del CssModuler.
+       * @description Y concretamente, para habilitar la gestión de rutas relativas desde los `@requires:` de los fichero css.
+       * @description Igual más adelante tiene más razones/dependencia lógica, pero en su origen, la razón es esta.
+       * @description Aunque parezca excesivo arrastrar toda la API de ModulerV5 por esta razón, hay que tener en cuenta que:
+       * @description 1. DevToolkit se utiliza en development-time, no en run-time, por lo cual la performance es un poco menos crítica.
+       * @description 2. Es la forma más razonable de reaprovechar el código ya escrito en ModulerV5 que interesa en el development-time
+       * @description 3. Lo único que no es óptimo aquí es arrastrar la lógica de modulación en run-time del JavaScript. Pero tampoco está de más, y puede serte útil también tener modulación en development-time, simplemente que el framework de DevToolkit no la explota directamente porque ya centraliza todas las utilidades base.
+       * @description 4. Al ir avanzando en el desarrollo, será cuestión de tiempo querer arrastrar el framework de ModulerV5 también en el development-time: la compactación del CSS ha sido la primera necesidad, pero con el tiempo no sería la única.
+       * @description Para saber más, puedes ir a la clase DevToolkit.ModulerV5.
+       */
       this.moduler = this.constructor.Moduler.create(this.basedir);
     }
     /**

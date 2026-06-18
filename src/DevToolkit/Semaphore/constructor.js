@@ -7,6 +7,6 @@
  * @description Construye una instancia.
  */
 constructor(toolkit, filename = "semaphore.main.txt") {
-  this.toolkit = toolkit;
-  this.filename = filename;
+  /*<$=await include("./prototype.toolkit.js")$>*/
+  /*<$=await include("./prototype.filename.js")$>*/
 }

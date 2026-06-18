@@ -15,14 +15,14 @@
  * @description En la construcción de DevToolkit se establecen las propiedades. En general, lo que consigues creando estas instancias es facilitar que los métodos de ellas conozcan la ruta raíz del proyecto, y así no tener que estar combinándolas con `DevToolkit.prototype.fullpathOf` manualmente en cada caso.
  */
 constructor(basedir = process.cwd()) {
-  this.basedir = require("path").resolve(basedir);
-  this.fileSystem = new this.constructor.FileSystem(this);
-  this.cli = new this.constructor.CommandLine(this);
-  this.documentator = new this.constructor.Documentator(this);
-  this.testing = new this.constructor.Testing(this);
-  this.templating = new this.constructor.Templating(this);
-  this.events = new this.constructor.Events(this);
-  this.semaphore = new this.constructor.Semaphore(this, "semaphore.dev-toolkit.txt");
-  this.assert = this.constructor.Testing.Asserter.createAssert().assert;
-  this.moduler = this.constructor.Moduler.create(this.basedir);
+  /*<$=await include("./prototype.basedir.js")$>*/
+  /*<$=await include("./prototype.fileSystem.js")$>*/
+  /*<$=await include("./prototype.cli.js")$>*/
+  /*<$=await include("./prototype.documentator.js")$>*/
+  /*<$=await include("./prototype.testing.js")$>*/
+  /*<$=await include("./prototype.templating.js")$>*/
+  /*<$=await include("./prototype.events.js")$>*/
+  /*<$=await include("./prototype.semaphore.js")$>*/
+  /*<$=await include("./prototype.assert.js")$>*/
+  /*<$=await include("./prototype.moduler.js")$>*/
 }
