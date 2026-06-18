@@ -6,5 +6,6 @@
  * @description Construye la instancia de DevToolkit.CommandLine
  */
 constructor(toolkit) {
-  this.toolkit = toolkit;
+  /*<$=await include("./prototype.toolkit.js")$>*/
+  /*<$=await include("./prototype.tools.js")$>*/
 }

@@ -3,12 +3,11 @@ module.exports = async function (...args) {
   const { assert, assertFileExists, assertFileMissing, } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "DevToolkit/CommandLine/api".padEnd(titleColumns) });
   assert(1, "DevToolkit/CommandLine/api");
   Los_comandos_basicos_del_cli_estan_en_la_api: {
-    assert(typeof devToolkit.cli.buildJs === "function", `Can find «dev build js» as method in «devToolkit.cli»`);
-    assert(typeof devToolkit.cli.buildCss === "function", `Can find «dev build css» as method in «devToolkit.cli»`);
-    assert(typeof devToolkit.cli.buildTs === "function", `Can find «dev build ts» as method in «devToolkit.cli»`);
-    assert(typeof devToolkit.cli.testJs === "function", `Can find «dev test js» as method in «devToolkit.cli»`);
-    assert(typeof devToolkit.cli.loop === "function", `Can find «dev loop» as method in «devToolkit.cli»`);
-    assert(typeof devToolkit.cli.up === "function", `Can find «dev up» as method in «devToolkit.cli»`);
+    assert(typeof devToolkit.cli.tools.buildJs === "function", `Can find «dev build js» as method in «devToolkit.cli»`);
+    assert(typeof devToolkit.cli.tools.buildCss === "function", `Can find «dev build css» as method in «devToolkit.cli»`);
+    assert(typeof devToolkit.cli.tools.testJs === "function", `Can find «dev test js» as method in «devToolkit.cli»`);
+    assert(typeof devToolkit.cli.tools.loop === "function", `Can find «dev loop» as method in «devToolkit.cli»`);
+    assert(typeof devToolkit.cli.tools.up === "function", `Can find «dev up» as method in «devToolkit.cli»`);
   }
   Plantillas_funcionan: {
     await devToolkit.fileSystem.writeFile("devtoolkit-cli.test/api-test-1/asset-1.1.js", `1`);

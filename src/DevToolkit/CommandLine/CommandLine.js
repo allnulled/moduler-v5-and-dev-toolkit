@@ -4,16 +4,13 @@
  * @description Clase con utilidades para la interfaz de línea de comandos de DevToolkit
  */
 static CommandLine = class CommandLine {
-  /*<$=await include("./Colors.js")$>*/0;
-  /*<$=await include("./printError.js")$>*/0;
-  /*<$=await include("./constructor.js")$>*/0;
-  /*<$=await include("./baseProject.js")$>*/0;
-  /*<$=await include("./prototype.tool.js")$>*/0;
-  /*<$=await include("./prototype.createProject.js")$>*/0;
-  /*<$=await include("./prototype.buildJs.js")$>*/0;
-  /*<$=await include("./prototype.buildCss.js")$>*/0;
-  /*<$=await include("./prototype.buildTs.js")$>*/0;
-  /*<$=await include("./prototype.testJs.js")$>*/0;
-  /*<$=await include("./prototype.loop.js")$>*/0;
-  /*<$=await include("./prototype.up.js")$>*/0;
+  /*<$=await include("./baseProject.js")$>*/
+  /*<$=await include("./Colors.js")$>*/
+  /*<$=await include("./Tools/Tools.js")$>*/
+  /*<$=await include("./create.js")$>*/
+  /*<$=await include("./printError.js")$>*/
+  /*<$=await include("./constructor.js")$>*/
+  /*<$=await include("./prototype.findProjectRoot.js")$>*/
+  /*<$=await include("./prototype.createProject.js")$>*/
+  /*<$=await include("./prototype.tool.js")$>*/
 }

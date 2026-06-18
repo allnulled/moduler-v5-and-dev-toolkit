@@ -69,7 +69,7 @@
           return it;
         }
       }
-    };
+    }
     /**
      * @name DevToolkit.Utils
      * @type class
@@ -77,7 +77,7 @@
      */
     static Utils = class Utils {
 
-    };
+    }
     /**
      * @name DevToolkit.Debug
      * @type class
@@ -94,7 +94,64 @@
         console.log(...args);
         process.exit(1);
       }
-    };
+    }
+    /**
+     * @name DevToolkit.Reflection
+     * @type class
+     * @description Clase con utilidades de introspección. Principalmente estáticas.
+     */
+    static Reflection = class Reflection {
+      /**
+       * @name DevToolkit.Reflection.getDescriptionOf
+       * @type static method
+       * @parameter obj:Object|Function|Class - Ontología a debuggar sus propiedades.
+       * @returns Object - El objeto con la descripción. Tiene propiedades, metodos, simbolos, y heredadas.
+       * @by ChatGPT.
+       * @description Obtiene un objeto con una descripción del objeto pasado con parámetros. Por el camino usa Reflect.ownKeys, Object.getOwnPropertyDescriptor y Object.getPrototypeOf.
+       */
+      static getDescriptionOf(obj) {
+        const resultado = {
+          propiedades: [],
+          metodos: [],
+          simbolos: [],
+          heredadas: []
+        };
+        // Propiedades propias (incluyendo no enumerables)
+        for (const key of Reflect.ownKeys(obj)) {
+          const desc = Object.getOwnPropertyDescriptor(obj, key);
+          if (typeof key === "symbol") {
+            resultado.simbolos.push(key);
+          } else if (typeof desc.value === "function") {
+            resultado.metodos.push(key);
+          } else {
+            resultado.propiedades.push(key);
+          }
+        }
+        // Recorrer la cadena de prototipos
+        let proto = Object.getPrototypeOf(obj);
+        while (proto && proto !== Object.prototype) {
+          for (const key of Reflect.ownKeys(proto)) {
+            if (key === "constructor") continue;
+            resultado.heredadas.push({
+              nombre: key,
+              tipo: typeof proto[key]
+            });
+          }
+          proto = Object.getPrototypeOf(proto);
+        }
+        return resultado;
+      }
+      /**
+       * @name DevToolkit.Reflection.printDescriptionOf
+       * @type static method
+       * @parameter obj:Object|Function|Class - Ontología a debuggar sus propiedades.
+       * @returns void - Nada.
+       * @description Imprime una descripción profunda del objeto pasado con parámetros. Usa this.getDescriptionOf y lo pasa a console.log.
+       */
+      static printDescriptionOf(obj) {
+        console.log(this.getDescriptionOf(obj));
+      }
+    }
     /**
      * @name DevToolkit.Documentator
      * @type class 
@@ -256,37 +313,13 @@
         }
         return outputMd;
       }
-    };
+    }
     /**
      * @name DevToolkit.CommandLine
      * @type class
      * @description Clase con utilidades para la interfaz de línea de comandos de DevToolkit
      */
     static CommandLine = class CommandLine {
-      /**
-       * @name DevToolkit.CommandLine.Colors
-       * @type class
-       * @description Clase con utilidades para pintar colores por consola, tablas, cajas, y cosas así. Esta clase se saca de `require(__dirname + "/refrescador.api.dist.js").colors`. Por lo cual, se sobreentiende que `dev-toolkit.dist.js` tiene que estar acompañado de este fichero.
-       */
-      static Colors = require(__dirname + "/refrescador.api.dist.js").colors;
-      /**
-       * @name DevToolkit.CommandLine.printError
-       * @parameter error:Error - Instancia de la clase Error que se quiere imprimir.
-       * @description Imprime un error pero bonitamente, con colores.
-       */
-      static printError(error) {
-        console.log(DevToolkit.CommandLine.Colors.style("redBright,bold").text(DevToolkit.CommandLine.Colors.box(`${error.name}: ${error.message}`)), "\n", error);
-      };
-      /**
-       * @name DevToolkit.CommandLine.constructor
-       * @type class constructor
-       * @parameter toolkit:DevToolkit - Instancia de DevToolkit para esta clase.
-       * @sets this.toolkit a partir del parámetro proporcionado.
-       * @description Construye la instancia de DevToolkit.CommandLine
-       */
-      constructor(toolkit) {
-        this.toolkit = toolkit;
-      };
       /**
        * @name DevToolkit.CommandLine.baseProject
        * @type Object
@@ -364,7 +397,179 @@
           "unit": {},
           "user": {}
         }
+      }
+      /**
+       * @name DevToolkit.CommandLine.Colors
+       * @type class
+       * @description Clase con utilidades para pintar colores por consola, tablas, cajas, y cosas así. Esta clase se saca de `require(__dirname + "/refrescador.api.dist.js").colors`. Por lo cual, se sobreentiende que `dev-toolkit.dist.js` tiene que estar acompañado de este fichero.
+       */
+      static Colors = require(__dirname + "/refrescador.api.dist.js").colors
+      /**
+       * @name DevToolkit.CommandLine.Tools
+       * @type static property + `Class<Tools>`
+       */
+      static Tools = class Tools {
+        /**
+         * @name DevToolkit.CommandLine.Tools.create
+         * @type static method
+         * @description Constructor que evita el new.
+         */
+        static create(...args) {
+          return new this(...args);
+        }
+        constructor(commandLine) {
+          /**
+           * @name DevToolkit.CommandLine.Tools.prototype.toolkit
+           * @in-constructor
+           * @not-prototype
+           * @type class property + DevToolkit
+           * @description Es una propiedad de acceso al DevToolkit que dio origen a esta instancia
+           */
+          this.toolkit = commandLine.toolkit;
+        }
+        /**
+         * @name DevToolkit.CommandLine.prototype.buildDocs
+         * @not-finished
+         */
+        buildDocs() {
+
+        }
+        /**
+         * @name DevToolkit.CommandLine.Tools.prototype.buildCss
+         * @not-finished
+         */
+        buildCss() {
+
+        }
+        /**
+         * @name DevToolkit.CommandLine.Tools.prototype.buildJs
+         * @type class method
+         * @parameter file:String - Fichero a construir.
+         * @requirement El file:String debe empezar por `src/`
+         * @requirement El file:String debe terminar por `.entry.js`
+         * @returns `Promise<void>` - Nada
+         * @description Lo que va a hacer es crear el fichero `dist/{ruta}.dist.js` con la compilación de este.
+         * @description La compilación se hace con el método `this.toolkit.templating.tjs.renderFile(file)`
+         */
+        async buildJs(file) {
+          const {
+            assert
+          } = this.toolkit;
+          assert(file.startsWith("src/"), "Parameter «file» must start with «src/» on «DevToolkit.CommandLine.Tools.prototype.buildJs»");
+          assert(file.endsWith(".entry.js"), "Parameter «file» must end with «.entry.js» on «DevToolkit.CommandLine.Tools.prototype.buildJs»");
+          const distFile = file.replace(/^src\//g, "dist/").replace(/\.entry\.js$/g, ".dist.js");
+          const fullpathSrcFile = this.toolkit.fullpathOf(file);
+          const fullpathDistFile = this.toolkit.fullpathOf(distFile);
+          const compiledContent = await this.toolkit.templating.tjs.renderFile(fullpathSrcFile);
+          await this.toolkit.fileSystem.writeFile(distFile, compiledContent, {
+            recursive: true
+          });
+        }
+        /**
+         * @name DevToolkit.CommandLine.Tools.prototype.testJs
+         * @not-finished
+         */
+        testJs() {
+
+        }
+        /**
+         * @name DevToolkit.CommandLine.Tools.prototype.loop
+         * @not-finished
+         */
+        loop() {
+
+        }
+        /**
+         * @name DevToolkit.CommandLine.Tools.prototype.up
+         * @type class method
+         * @description ...
+         */
+        up() {
+
+        }
       };
+      /**
+       * @name DevToolkit.CommandLine.create
+       * @type static method
+       * @description Constructor que evita el new.
+       */
+      static create(...args) {
+        return new this(...args);
+      }
+      /**
+       * @name DevToolkit.CommandLine.printError
+       * @parameter error:Error - Instancia de la clase Error que se quiere imprimir.
+       * @description Imprime un error pero bonitamente, con colores.
+       */
+      static printError(error) {
+        console.log(DevToolkit.CommandLine.Colors.style("redBright,bold").text(DevToolkit.CommandLine.Colors.box(`${error.name}: ${error.message}`)), "\n", error);
+      }
+      /**
+       * @name DevToolkit.CommandLine.constructor
+       * @type class constructor
+       * @parameter toolkit:DevToolkit - Instancia de DevToolkit para esta clase.
+       * @sets this.toolkit a partir del parámetro proporcionado.
+       * @description Construye la instancia de DevToolkit.CommandLine
+       */
+      constructor(toolkit) {
+        /**
+         * @name DevToolkit.CommandLine.prototype.toolkit
+         * @type class property + DevToolkit
+         * @description Instancia DevToolkit que creó este CommandLine
+         * @description Para ver más, consultar la clase DevToolkit
+         */
+        this.toolkit = toolkit;
+        /**
+         * @name DevToolkit.CommandLine.prototype.tools
+         * @type class property + DevToolkit.CommandLine.Tools
+         * @description Instancia DevToolkit.CommandLine.Tools, el kit de herramientas para línea de comandos incluidas por defecto en el DevToolkit.CommandLine
+         * @description Para ver más, consultar la clase DevToolkit.CommandLine.Tools
+         */
+        this.tools = this.constructor.Tools.create(this);
+      }
+      /**
+       * @name DevToolkit.CommandLine.prototype.findProjectRoot
+       * @type class method
+       * @parameter fromDirectory:String = process.cwd() - Directorio desde el que quieres iniciar la búsqueda
+       * @parameter file:String = "package.json" - Nombre del fichero que se usará para encontrar el directorio raíz del proyecto
+       * @throws Error - Lanzará un error de "project root not found by file ${file}"
+       * @returns `Promise<String>` - Directorio considerado raíz del proyecto
+       * @description Buscará desde el directorio `fromDirectory:String` hacia arriba el primer directorio que encuentre el fichero `file:String`.
+       * @description De no encontrarse y llegar a la raíz del sistema operativo, lanzará un error.
+       */
+      async findProjectRoot(fromDirectory = process.cwd(), file = "package.json") {
+        const fs = require("fs");
+        const path = require("path");
+        let previousDirectory = null;
+        let currentDirectory = path.resolve(fromDirectory);
+        while (currentDirectory !== previousDirectory) {
+          previousDirectory = currentDirectory;
+          currentDirectory = path.dirname(currentDirectory);
+          try {
+            await fs.promises.readFile(`${currentDirectory}/${file}`);
+            return currentDirectory;
+          } catch (error) {
+            // @OK.
+          }
+        }
+        throw new Error(`project root not found by file «${file}» from directory «${fromDirectory}» on «DevToolkit.CommandLine.prototype.findProjectRoot»`);
+      }
+      /**
+       * @name DevToolkit.CommandLine.prototype.createProject
+       * @type class method
+       * @returns true - Si todo ha ido bien.
+       * @description Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
+       */
+      async createProject(targetDirectory) {
+        const fs = require("fs");
+        const targetFullpath = this.toolkit.fullpathOf(targetDirectory);
+        const contents = await fs.promises.readdir(targetFullpath);
+        this.toolkit.assert(contents.length === 0, `required directory «${targetFullpath}» to be empty to create project «DevToolkit.CommandLine.prototype.createProject»`);
+        const output = JSON.parse(JSON.stringify(this.constructor.baseProject));
+        output["src"]["lib"]["dev-toolkit"]["dev-toolkit.dist.js"] = await fs.promises.readFile(__filename, "utf8");
+        await this.toolkit.constructor.FileSystem.fromObjectToDirectory(output, targetFullpath);
+        return true;
+      }
       /**
        * @name DevToolkit.CommandLine.prototype.tool
        * @type class method
@@ -400,66 +605,8 @@
           console.error(error);
           throw error;
         }
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.createProject
-       * @type class method
-       * @returns true - Si todo ha ido bien.
-       * @description Construye un proyecto que utiliza DevToolkit y ModulerV5 para modular js y css. Requiere que el directorio esté vacío. Este método obliga que el fichero `dev-toolkit.dist.js` esté con todo el contenido de la clase.
-       */
-      async createProject(targetDirectory) {
-        const fs = require("fs");
-        const targetFullpath = this.toolkit.fullpathOf(targetDirectory);
-        const contents = await fs.promises.readdir(targetFullpath);
-        this.toolkit.assert(contents.length === 0, `required directory «${targetFullpath}» to be empty to create project «DevToolkit.CommandLine.prototype.createProject»`);
-        const output = JSON.parse(JSON.stringify(this.constructor.baseProject));
-        output["src"]["lib"]["dev-toolkit"]["dev-toolkit.dist.js"] = await fs.promises.readFile(__filename, "utf8");
-        await this.toolkit.constructor.FileSystem.fromObjectToDirectory(output, targetFullpath);
-        return true;
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.buildJs
-       * @not-finished
-       */
-      buildJs() {
-
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.buildCss
-       * @not-finished
-       */
-      buildCss() {
-
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.buildTs
-       * @not-finished
-       */
-      buildTs() {
-
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.testJs
-       * @not-finished
-       */
-      testJs() {
-
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.loop
-       * @not-finished
-       */
-      loop() {
-
-      };
-      /**
-       * @name DevToolkit.CommandLine.prototype.up
-       * @not-finished
-       */
-      up() {
-
-      };
-    };
+      }
+    }
     /**
      * @name DevToolkit.Testing
      * @type class
@@ -577,7 +724,7 @@
       constructor(toolkit) {
         this.toolkit = toolkit;
       }
-    };
+    }
     /**
      * @name DevToolkit.Events
      * @type class
@@ -678,7 +825,7 @@
       async propagateOnDistribute(file) {
 
       }
-    };
+    }
     /**
      * @name DevToolkit.Semaphore
      * @type class
@@ -762,7 +909,7 @@
           throw error;
         }
       }
-    };
+    }
     /**
      * @name DevToolkit.FileWatcher
      * @type class
@@ -784,7 +931,7 @@
       static start(options) {
         return this.Refrescador.run(options);
       }
-    };
+    }
     /**
      * @name DevToolkit.FileSystem
      * @type class
@@ -839,7 +986,13 @@
       static writeFile(file, contents, options = {
         recursive: false
       }) {
-        if (options.recursive) throw new Error("operation not supported yet: writeFile + recursive=true");
+        if (options.recursive) {
+          return require("fs").promises.mkdir(require("path").dirname(file), {
+            recursive: true
+          }).then(() => {
+            return require("fs").promises.writeFile(file, contents);
+          });
+        }
         return require("fs").promises.writeFile(file, contents);
       }
       /**
@@ -1160,7 +1313,7 @@
       sizeOf(file, ...args) {
         return this.constructor.sizeOf(this.toolkit.fullpathOf(file), ...args);
       }
-    };
+    }
     /**
      * @name DevToolkit.Templating
      * @type class
@@ -1185,7 +1338,7 @@
         this.toolkit = toolkit;
         this.tjs = this.constructor.Tjs.create(this.toolkit.basedir);
       }
-    };
+    }
     /**
      * @name DevToolkit.Time
      * @type class
@@ -1196,7 +1349,7 @@
       static timeout(ms) {
         return require("timers/promises").setTimeout(ms);
       }
-    };
+    }
     /**
      * @name DevToolkit.constructor
      * @type class constructor

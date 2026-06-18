@@ -57,6 +57,20 @@
 
 ----
 
+- **@name:** ModulerV5.CssModuler.prototype.sheets
+- **@type:** class property + `Object<String,{ id:String, source:String, requires:Array<String> }>`
+- **@description:**
+   - Objeto con la metainformación de todas las hojas CSS añadidas en la instancia.
+   - Esta metainformación se compone de un id:String, un source:String y un `requires:Array<String>`.
+----
+
+- **@name:** ModulerV5.CssModuler.prototype.entry
+- **@type:** class property + CSSStyleSheet|FakeCssStyleSheet
+- **@description:**
+   - Objeto nativo del browser (CSSStyleSheet) o polyfill propio en entornos no-browser (FakeCssStyleSheet) para hacer (o fake-polifilear) la inyección de estilos en la página.
+   - De este objeto, lo que se va a usar es el método `.replace(source:String)`.
+----
+
 - **@name:** ModulerV5.CssModuler.prototype.assert
 - **@type:** class method
 - **@parameter:**
@@ -180,6 +194,44 @@
    - El uso de las instancias locales se reduce a llamadas de primer nivel superficial, que te permitan usar rutas locales.
    - Esto último, en la modulación CSS es inevitable, así que no es problema.
    - En cuanto a JavaScript, lo que implica es que no conviene usar `LocalDictionary` dentro de funciones, porque vas a provocar retener diversas instancias ModulerV5 en la memoria del motor de V8, y aunque no sea muy crítico en principio, es una mala práctica que va a polucionar innecesariamente la memoria. De requerirlo, usar mejor la instancia global de `ModulerV5.Dictionary`, que es única en todo el programa, lo único que pierdes es la capacidad de especificar rutas relativas.
+----
+
+- **@name:** ModulerV5.prototype.isBrowser
+- **@type:** class prototype + Boolean
+- **@description:** Flag que indica si se está funcionando en navegador o no. Se aclara por la expresión `typeof window !== "undefined"`.
+
+----
+
+- **@name:** ModulerV5.prototype.rootdir
+- **@type:** class property + String
+- **@in-constructor:** 
+- **@not-prototype:** 
+- **@description:** Propiedad del ModulerV5 que indica el this.basedir del ModulerV5 más alto en la cadena de clonación. Por clonación se entienden las instancias creadas por los métodos cloneForFile y cloneForDirectory, o cualquier instancia que se haya creado pasándole otra instancia de ModulerV5 en los parámetros del constructor.
+
+----
+
+- **@name:** ModulerV5.prototype.basedir
+- **@type:** class property + String
+- **@in-constructor:** 
+- **@not-prototype:** 
+- **@description:** Propiedad del ModulerV5 que indica el directorio base de la instancia. Se diferencia del rootdir porque no tiene por qué coincidir con el this.basedir del ModulerV5 más alto de la cadena de clones.
+
+----
+
+- **@name:** ModulerV5.prototype.definitions
+- **@type:** class property + `Object<String,any>`
+- **@in-constructor:** 
+- **@not-prototype:** 
+- **@description:** Objeto con las definiciones retenidas por la instancia de ModulerV5.
+
+----
+
+- **@name:** ModulerV5.prototype.css
+- **@type:** class property + CssModuler
+- **@in-constructor:** 
+- **@not-prototype:** 
+- **@description:** Instancia de ModulerV5.CssModuler asociada a este ModulerV5. En una misma cadena de clonación se comparte el mismo CssModuler. Esto implica que un cambio en el this.css desde cualquier punto de la cadena de clones, afecta igual y simultáneamente a toda la cadena.
+
 ----
 
 - **@name:** ModulerV5.inspectToString
@@ -391,7 +443,7 @@
 - **@type:** ModulerV5
 - **@description:**
    - Instancia global de ModulerV5. Tienes una referencia global para todo el programa aquí, así evitas duplicidades y otros inconvenientes.
-   - Utiliza los parámetros por defecto.
+   - Utiliza los parámetros por defecto. Por lo cual, es instancia original, no clonada.
 ----
 
 - **@name:** Promise.fromObject
@@ -469,6 +521,29 @@
 
 ----
 
+- **@name:** DevToolkit.Reflection
+- **@type:** class
+- **@description:** Clase con utilidades de introspección. Principalmente estáticas.
+
+----
+
+- **@name:** DevToolkit.Reflection.getDescriptionOf
+- **@type:** static method
+- **@parameter:** obj:Object|Function|Class - Ontología a debuggar sus propiedades.
+- **@returns:** Object - El objeto con la descripción. Tiene propiedades, metodos, simbolos, y heredadas.
+- **@by:** ChatGPT.
+- **@description:** Obtiene un objeto con una descripción del objeto pasado con parámetros. Por el camino usa Reflect.ownKeys, Object.getOwnPropertyDescriptor y Object.getPrototypeOf.
+
+----
+
+- **@name:** DevToolkit.Reflection.printDescriptionOf
+- **@type:** static method
+- **@parameter:** obj:Object|Function|Class - Ontología a debuggar sus propiedades.
+- **@returns:** void - Nada.
+- **@description:** Imprime una descripción profunda del objeto pasado con parámetros. Usa this.getDescriptionOf y lo pasa a console.log.
+
+----
+
 - **@name:** DevToolkit.Documentator
 - **@type:** class 
 - **@description:** Utilidades para documentación de DevToolkit
@@ -525,9 +600,78 @@
 
 ----
 
+- **@name:** DevToolkit.CommandLine.baseProject
+- **@type:** Object
+- **@description:** Este objeto contiene el esqueleto de un proyecto nuevo que utilizará `DevToolkit` y `ModulerV5`. Tiene la estructura de carpetas y ficheros con su contenido necesarios para ello.
+
+----
+
 - **@name:** DevToolkit.CommandLine.Colors
 - **@type:** class
 - **@description:** Clase con utilidades para pintar colores por consola, tablas, cajas, y cosas así. Esta clase se saca de `require(__dirname + "/refrescador.api.dist.js").colors`. Por lo cual, se sobreentiende que `dev-toolkit.dist.js` tiene que estar acompañado de este fichero.
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools
+- **@type:** static property + `Class<Tools>`
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.create
+- **@type:** static method
+- **@description:** Constructor que evita el new.
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.toolkit
+- **@in-constructor:** 
+- **@not-prototype:** 
+- **@type:** class property + DevToolkit
+- **@description:** Es una propiedad de acceso al DevToolkit que dio origen a esta instancia
+
+----
+
+- **@name:** DevToolkit.CommandLine.prototype.buildDocs
+- **@not-finished:** 
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.buildCss
+- **@not-finished:** 
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.buildJs
+- **@type:** class method
+- **@parameter:** file:String - Fichero a construir.
+- **@requirement:**
+   - El file:String debe empezar por `src/`
+   - El file:String debe terminar por `.entry.js`
+- **@returns:** `Promise<void>` - Nada
+- **@description:**
+   - Lo que va a hacer es crear el fichero `dist/{ruta}.dist.js` con la compilación de este.
+   - La compilación se hace con el método `this.toolkit.templating.tjs.renderFile(file)`
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.testJs
+- **@not-finished:** 
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.loop
+- **@not-finished:** 
+
+----
+
+- **@name:** DevToolkit.CommandLine.Tools.prototype.up
+- **@type:** class method
+- **@description:** ...
+
+----
+
+- **@name:** DevToolkit.CommandLine.create
+- **@type:** static method
+- **@description:** Constructor que evita el new.
 
 ----
 
@@ -545,18 +689,30 @@
 
 ----
 
-- **@name:** DevToolkit.CommandLine.baseProject
-- **@type:** Object
-- **@description:** Este objeto contiene el esqueleto de un proyecto nuevo que utilizará `DevToolkit` y `ModulerV5`. Tiene la estructura de carpetas y ficheros con su contenido necesarios para ello.
-
+- **@name:** DevToolkit.CommandLine.prototype.toolkit
+- **@type:** class property + DevToolkit
+- **@description:**
+   - Instancia DevToolkit que creó este CommandLine
+   - Para ver más, consultar la clase DevToolkit
 ----
 
-- **@name:** DevToolkit.CommandLine.prototype.tool
-- **@type:** class method
-- **@parameter:** args:`Array<String>`- Indica la herramienta. Permite niveles. Cada nivel es concatenado con el caracter `/`, que luego es normalizado por `DevToolkit.prototype.fullpathOf`. Este parámetro pueden ser los `process.argv` que buscará donde terminan los argumentos posicionales y los tomará desde ahí automáticamente.
-- **@returns:** any - Lo que devuelva la herramienta llamada.
-- **@description:** Llama a la herramienta que esté guardada dentro de la raíz del proyecto, en `dev/cli/tool/{args.join("/")}
+- **@name:** DevToolkit.CommandLine.prototype.tools
+- **@type:** class property + DevToolkit.CommandLine.Tools
+- **@description:**
+   - Instancia DevToolkit.CommandLine.Tools, el kit de herramientas para línea de comandos incluidas por defecto en el DevToolkit.CommandLine
+   - Para ver más, consultar la clase DevToolkit.CommandLine.Tools
+----
 
+- **@name:** DevToolkit.CommandLine.prototype.findProjectRoot
+- **@type:** class method
+- **@parameter:**
+   - fromDirectory:String = process.cwd() - Directorio desde el que quieres iniciar la búsqueda
+   - file:String = "package.json" - Nombre del fichero que se usará para encontrar el directorio raíz del proyecto
+- **@throws:** Error - Lanzará un error de "project root not found by file ${file}"
+- **@returns:** `Promise<String>` - Directorio considerado raíz del proyecto
+- **@description:**
+   - Buscará desde el directorio `fromDirectory:String` hacia arriba el primer directorio que encuentre el fichero `file:String`.
+   - De no encontrarse y llegar a la raíz del sistema operativo, lanzará un error.
 ----
 
 - **@name:** DevToolkit.CommandLine.prototype.createProject
@@ -566,33 +722,11 @@
 
 ----
 
-- **@name:** DevToolkit.CommandLine.prototype.buildJs
-- **@not-finished:** 
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.buildCss
-- **@not-finished:** 
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.buildTs
-- **@not-finished:** 
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.testJs
-- **@not-finished:** 
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.loop
-- **@not-finished:** 
-
-----
-
-- **@name:** DevToolkit.CommandLine.prototype.up
-- **@not-finished:** 
+- **@name:** DevToolkit.CommandLine.prototype.tool
+- **@type:** class method
+- **@parameter:** args:`Array<String>`- Indica la herramienta. Permite niveles. Cada nivel es concatenado con el caracter `/`, que luego es normalizado por `DevToolkit.prototype.fullpathOf`. Este parámetro pueden ser los `process.argv` que buscará donde terminan los argumentos posicionales y los tomará desde ahí automáticamente.
+- **@returns:** any - Lo que devuelva la herramienta llamada.
+- **@description:** Llama a la herramienta que esté guardada dentro de la raíz del proyecto, en `dev/cli/tool/{args.join("/")}
 
 ----
 

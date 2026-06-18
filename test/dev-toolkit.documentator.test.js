@@ -2,15 +2,16 @@ module.exports = async function (...args) {
   const { DevToolkit, devToolkit, ModulerV5, startTime, titleColumns } = args[0];
   const { assert, assertDeepEqual } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "DevToolkit/documentator".padEnd(titleColumns) });
   assert(1, "DevToolkit/documentator");
-  const docsJson = await devToolkit.documentator.extractJavadocCommentsFromDirectory();
-  //*
+  const devToolkit2 = DevToolkit.create(`${__dirname}/tests-assets/devtoolkit-documentator.test`);
+  const docsJson = await devToolkit2.documentator.extractJavadocCommentsFromDirectory();
+  /*
   console.log(docsJson);
   for (let index = 0; index < docsJson.length; index++) {
     const doc = docsJson[index];
   }
   //*/
   const expectedJson = {
-    "{@root}/devtoolkit-documentator.test/documentable-1.js": [
+    "{@root}/documentable-1.js": [
       {
         "@tipo": [
           "Class"
@@ -46,11 +47,12 @@ module.exports = async function (...args) {
       }
     ]
   };
+  // DevToolkit.Debug.die(docsJson, expectedJson);
   assertDeepEqual(docsJson, expectedJson, "can extract javadoc comments as expected");
-  const docsText = await devToolkit.documentator.extractJavadocTextFromDirectory();
+  const docsText = await devToolkit2.documentator.extractJavadocTextFromDirectory();
   const expectedText = `----
 
-**{@root}/devtoolkit-documentator.test/documentable-1.js**
+**{@root}/documentable-1.js**
 
 ----
 

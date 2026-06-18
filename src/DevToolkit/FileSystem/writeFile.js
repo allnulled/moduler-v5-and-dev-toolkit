@@ -8,6 +8,10 @@
  * @description Sobreescribe un fichero con el contenido especificado.
  */
 static writeFile(file, contents, options = { recursive: false }) {
-  if(options.recursive) throw new Error("operation not supported yet: writeFile + recursive=true");
+  if(options.recursive) {
+    return require("fs").promises.mkdir(require("path").dirname(file), { recursive: true }).then(() => {
+      return require("fs").promises.writeFile(file, contents);
+    });
+  }
   return require("fs").promises.writeFile(file, contents);
 }

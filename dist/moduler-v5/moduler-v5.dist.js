@@ -67,7 +67,19 @@
        */
       constructor(moduler) {
         this.moduler = moduler;
+        /**
+         * @name ModulerV5.CssModuler.prototype.sheets
+         * @type class property + `Object<String,{ id:String, source:String, requires:Array<String> }>`
+         * @description Objeto con la metainformación de todas las hojas CSS añadidas en la instancia.
+         * @description Esta metainformación se compone de un id:String, un source:String y un `requires:Array<String>`.
+         */
         this.sheets = {};
+        /**
+         * @name ModulerV5.CssModuler.prototype.entry
+         * @type class property + CSSStyleSheet|FakeCssStyleSheet
+         * @description Objeto nativo del browser (CSSStyleSheet) o polyfill propio en entornos no-browser (FakeCssStyleSheet) para hacer (o fake-polifilear) la inyección de estilos en la página.
+         * @description De este objeto, lo que se va a usar es el método `.replace(source:String)`.
+         */
         this.entry = typeof CSSStyleSheet === "function" ? new CSSStyleSheet() : this.constructor.fakeCssStyleSheet();
         if (!this.entry.isFake) {
           document.adoptedStyleSheets.push(this.entry);
@@ -283,6 +295,11 @@
      * @note En cuanto a JavaScript, lo que implica es que no conviene usar `LocalDictionary` dentro de funciones, porque vas a provocar retener diversas instancias ModulerV5 en la memoria del motor de V8, y aunque no sea muy crítico en principio, es una mala práctica que va a polucionar innecesariamente la memoria. De requerirlo, usar mejor la instancia global de `ModulerV5.Dictionary`, que es única en todo el programa, lo único que pierdes es la capacidad de especificar rutas relativas.
      */
     constructor(...args) {
+      /**
+       * @name ModulerV5.prototype.isBrowser
+       * @type class prototype + Boolean
+       * @description Flag que indica si se está funcionando en navegador o no. Se aclara por la expresión `typeof window !== "undefined"`.
+       */
       this.isBrowser = typeof window !== "undefined";
       let input1 = null;
       let input2 = null;
@@ -342,9 +359,37 @@
         this.assert(typeof definitions === "object", "on «ModulerV5.constructor»: variable «definitions» was not well formatted");
       }
       Step_5_Stablish_values: {
+        /**
+         * @name ModulerV5.prototype.rootdir
+         * @type class property + String
+         * @in-constructor
+         * @not-prototype
+         * @description Propiedad del ModulerV5 que indica el this.basedir del ModulerV5 más alto en la cadena de clonación. Por clonación se entienden las instancias creadas por los métodos cloneForFile y cloneForDirectory, o cualquier instancia que se haya creado pasándole otra instancia de ModulerV5 en los parámetros del constructor.
+         */
         this.rootdir = rootdir ?? basedir;
+        /**
+         * @name ModulerV5.prototype.basedir
+         * @type class property + String
+         * @in-constructor
+         * @not-prototype
+         * @description Propiedad del ModulerV5 que indica el directorio base de la instancia. Se diferencia del rootdir porque no tiene por qué coincidir con el this.basedir del ModulerV5 más alto de la cadena de clones.
+         */
         this.basedir = basedir;
+        /**
+         * @name ModulerV5.prototype.definitions
+         * @type class property + `Object<String,any>`
+         * @in-constructor
+         * @not-prototype
+         * @description Objeto con las definiciones retenidas por la instancia de ModulerV5.
+         */
         this.definitions = definitions;
+        /**
+         * @name ModulerV5.prototype.css
+         * @type class property + CssModuler
+         * @in-constructor
+         * @not-prototype
+         * @description Instancia de ModulerV5.CssModuler asociada a este ModulerV5. En una misma cadena de clonación se comparte el mismo CssModuler. Esto implica que un cambio en el this.css desde cualquier punto de la cadena de clones, afecta igual y simultáneamente a toda la cadena.
+         */
         this.css = cloneRoot ? cloneRoot.css : this.constructor.CssModuler.create(this);
       }
     }
@@ -740,7 +785,7 @@
    * @name ModulerV5.Dictionary
    * @type ModulerV5
    * @description Instancia global de ModulerV5. Tienes una referencia global para todo el programa aquí, así evitas duplicidades y otros inconvenientes.
-   * @description Utiliza los parámetros por defecto.
+   * @description Utiliza los parámetros por defecto. Por lo cual, es instancia original, no clonada.
    */
   ModulerV5.Dictionary = new ModulerV5();
 

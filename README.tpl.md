@@ -22,17 +22,24 @@ ModulerV5 es un modulador en runtime de JS y DevToolkit es un kit de herramienta
 
 ## Composición
 
-La API, en general, son clases e instancias de clase anidadas.
+- La API, en general, son clases e instancias de clase anidadas.
+- DevToolkit es un superconjunto de ModulerV5
+   - O ModulerV5 es un subconjunto de DevToolkit
+   - Quiere decir que si importar DevToolkit ya importas ModulerV5 automáticamente
+   - Esto se hace así porque:
+      - DevToolkit es código para el compilation-time
+         - Tiene todo lo necesario para la modulación/compilación en el compilation-time
+         - Principalmente, se incluyó a ModulerV5 para poder compilar el CSS en el compilation-time
+            - Pero el CssModuler requiere de ModulerV5
+            - Así que al final, he decidido incluir todo el ModulerV5 en el DevToolkit y ya está
+      - ModulerV5 es código para el run-time
+         - Se encarga de la modulación del JS y el CSS en run-time
+         - Tiene lo mínimo necesario para la modulación en el run-time
+         - Se separa de DevToolkit para contaminar lo menos posible el run-time
 
 ## Especificaciones
 
-Las especificaciones son documentos de apoyo que formalizan y explican cómo usar una API.
-
-- [ModulerV5 Spec.](./SPEC.ModulerV5.md)
-- [ModulerV5+CssModuler Spec.](./SPEC.ModulerV5.CssModuler.md)
-- [DevToolkit Spec.](./SPEC.DevToolkit.md)
-- [DevToolkit+CommandLine Spec.](./SPEC.DevToolkit.CommandLine.md)
-- [DevToolkit+Documentator Spec.](./SPEC.DevToolkit.Documentator.md)
+⚠️ En construcción.
 
 ### Partes más críticas
 
@@ -52,8 +59,8 @@ Los puntos donde la API se puede complicar un poco más son estos:
       - `socket.io: ^4.8.3`
    - `DevToolkit.Templating.Tjs`:
       - [https://github.com/allnulled/templated-js](https://github.com/allnulled/templated-js)
+         - tiene algún hack añadido, en `include` e `includeSync`, que puede no reflejarse en el proyecto original
       - `js-beautify: ^1.15.4`
-      - tiene algún hack añadido, en `include` e `includeSync`, que puede no reflejarse en el proyecto original
 
 ## Dominios de ModulerV5 y DevToolkit
 

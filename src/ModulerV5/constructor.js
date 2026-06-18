@@ -26,7 +26,7 @@
  * @note En cuanto a JavaScript, lo que implica es que no conviene usar `LocalDictionary` dentro de funciones, porque vas a provocar retener diversas instancias ModulerV5 en la memoria del motor de V8, y aunque no sea muy crítico en principio, es una mala práctica que va a polucionar innecesariamente la memoria. De requerirlo, usar mejor la instancia global de `ModulerV5.Dictionary`, que es única en todo el programa, lo único que pierdes es la capacidad de especificar rutas relativas.
  */
 constructor(...args) {
-  this.isBrowser = typeof window !== "undefined";
+  /*<$=await include("./prototype.isBrowser.js")$>*/
   let input1 = null;
   let input2 = null;
   Step_1_Receive_arguments: {
@@ -85,9 +85,9 @@ constructor(...args) {
     this.assert(typeof definitions === "object", "on «ModulerV5.constructor»: variable «definitions» was not well formatted");
   }
   Step_5_Stablish_values: {
-    this.rootdir = rootdir ?? basedir;
-    this.basedir = basedir;
-    this.definitions = definitions;
-    this.css = cloneRoot ? cloneRoot.css : this.constructor.CssModuler.create(this);
+    /*<$=await include("./prototype.rootdir.js")$>*/
+    /*<$=await include("./prototype.basedir.js")$>*/
+    /*<$=await include("./prototype.definitions.js")$>*/
+    /*<$=await include("./prototype.css.js")$>*/
   }
 }

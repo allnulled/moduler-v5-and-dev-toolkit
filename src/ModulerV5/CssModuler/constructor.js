@@ -8,9 +8,9 @@
  * @description Método constructor. Después de establecer las propiedades, inyecta la CSSStyleSheet en el document.adoptedStyleSheets, aunque esté vacía, que lo está.
  */
 constructor(moduler) {
-  this.moduler = moduler;
-  this.sheets = {};
-  this.entry = typeof CSSStyleSheet === "function" ? new CSSStyleSheet() : this.constructor.fakeCssStyleSheet();
+  /*<$=await include("./prototype.moduler.js")$>*/
+  /*<$=await include("./prototype.sheets.js")$>*/
+  /*<$=await include("./prototype.entry.js")$>*/
   if(!this.entry.isFake) {
     document.adoptedStyleSheets.push(this.entry);
   }
