@@ -2,10 +2,16 @@
  * @name ModulerV5.CssModuler.prototype._synchronizeSource
  * @type private method
  * @parameter eventToSync:Object - Se usará la propiedad source:String
- * @returns `Promise<void>` - Nada
- * @description Sincroniza el CSS de la página con las hojas añadidas en la instancia. Se llama al método CSSStyleSheet.prototype.replace. En entornos no-navegador, usará el polifill propio, así no explote en ningún entorno.
+ * @returns `Promise<eventToSync:Object>` - Evento de sincronización. Permite acceder al código fuente generado.
+ * @description Sincroniza el CSS de la página con las hojas añadidas en la instancia. 
+ * @description Se llama al método CSSStyleSheet.prototype.replace.
+ * @description En entornos no-navegador, usará el polifill propio, así no explote en ningún entorno.
+ * @description Devuelve el evento de sincronización, que permite acceder al código CSS compilado final.
  */
-async _synchronizeSource(eventToSync) {
+async _synchronizeSource(eventToSync, options = {}) {
   // @BROWSER pero polifileado:
-  await this.entry.replace(eventToSync.source);
+  if(!options.skipSync) {
+    await this.entry.replace(eventToSync.source);
+  }
+  return eventToSync;
 }

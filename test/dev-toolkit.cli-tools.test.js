@@ -1,6 +1,6 @@
 module.exports = async function (...args) {
   const { DevToolkit, devToolkit, ModulerV5, startTime, titleColumns } = args[0];
-  const { assert, assertFileExists, assertFileMissing, } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "DevToolkit/CommandLine/tools".padEnd(titleColumns) });
+  const { assert, assertFileExists, assertFileMissing, assertFileContents, } = DevToolkit.Testing.Asserter.createLoggerAssert({ startTime, prefix: "DevToolkit/CommandLine/tools".padEnd(titleColumns) });
   assert(1, "DevToolkit/CommandLine/tools");
   const memorize = {};
   Proyecto_1: {
@@ -76,11 +76,11 @@ module.exports = async function (...args) {
     await DevToolkit.FileSystem.writeDirectory(`${targetDirectory}/src/tmp`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.entry.js`, `module.exports = () => /*${''}<$=await include("./test2.js")$>${''}*/;`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test2.js`, `500`);
-    await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.css`, `/*${''}@requires:./test2.css${''}*/`);
+    await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.entry.css`, `/*${''}@requires:./test2.css${''}*/`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test2.css`, `html{background:black}`);
     assertFileExists(`${targetDirectory}/src/tmp/test.entry.js`, "Can prepare cli tool method test (point 1.5)");
     assertFileExists(`${targetDirectory}/src/tmp/test2.js`, "Can prepare cli tool method test (point 1.6)");
-    assertFileExists(`${targetDirectory}/src/tmp/test.css`, "Can prepare cli tool method test (point 1.7)");
+    assertFileExists(`${targetDirectory}/src/tmp/test.entry.css`, "Can prepare cli tool method test (point 1.7)");
     assertFileExists(`${targetDirectory}/src/tmp/test2.css`, "Can prepare cli tool method test (point 1.8)");
     // 1. Comprobar que buildJs funciona como se espera
     Testear_buildJs: {
@@ -96,7 +96,21 @@ module.exports = async function (...args) {
     // 2. Comprobar que buildCss funciona como se espera
     Testear_buildCss: {
       const targetFile = `${targetDirectory}/src/tmp/test.css`;
-      await devToolkit3.cli.tools.buildCss(targetFile);
+      const targetFileDist = `${targetDirectory}/dist/tmp/test.dist.css`;
+      assertFileMissing(`${targetDirectory}/dist/tmp/test.dist.css`, "Can use buildCss and works as expected (point 1)");
+      await devToolkit3.cli.tools.buildCss("src/tmp/test.entry.css");
+      const expectedOutput = ""+
+`/*!original:@/src/tmp/test2.css*/
+/*!order:1*/
+html{background:black}
+
+/*!original:@/src/tmp/test.entry.css*/
+/*!order:2*/
+/*!requires:./test2.css*/
+
+`;
+      assertFileExists(`${targetDirectory}/dist/tmp/test.dist.css`, "Can use buildCss and works as expected (point 2)");
+      assertFileContents(`${targetDirectory}/dist/tmp/test.dist.css`, expectedOutput, "Can use buildCss and works as expected (point 3)");
       // @TODO: el test del método
       // @TODO: el test del método
       // @TODO: el test del método
@@ -123,7 +137,7 @@ module.exports = async function (...args) {
     // 5. Comprobar que loop funciona como se espera (difícil)
     // 6. Comprobar que up funciona como se espera (imposible)
     Eliminar_todo: {
-      //break Eliminar_todo;
+      break Eliminar_todo;
       await DevToolkit.FileSystem.emptyDirectory(targetDirectory);
       assertFileMissing(packageJsonPath, "Can prepare newly created project again (point 4.1)");
     }

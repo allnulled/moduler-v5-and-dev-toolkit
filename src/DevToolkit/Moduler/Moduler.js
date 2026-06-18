@@ -1,0 +1,1 @@
+static Moduler = /*<$=await include("./../../ModulerV5/ModulerV5.class.js")$>*/0;

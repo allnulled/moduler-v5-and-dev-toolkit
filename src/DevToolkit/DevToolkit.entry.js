@@ -23,6 +23,7 @@
     /*<$=await include("./FileSystem/FileSystem.js")$>*/
     /*<$=await include("./Templating/Templating.js")$>*/
     /*<$=await include("./Time/Time.js")$>*/
+    /*<$=await include("./Moduler/Moduler.js")$>*/
     /*<$=await include("./constructor.js")$>*/
     /*<$=await include("./prototype.fullpathOf.js")$>*/
     /*<$=await include("./prototype.subpathOf.js")$>*/

@@ -16,4 +16,5 @@ static CssModuler = class CssModuler {
   /*<$=await include("./prototype._exportSource.js")$>*/
   /*<$=await include("./prototype.remove.js")$>*/
   /*<$=await include("./prototype.synchronize.js")$>*/
+  /*<$=await include("./prototype.extractCompilation.js")$>*/
 }

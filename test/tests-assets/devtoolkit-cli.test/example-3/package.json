@@ -1,0 +1,24 @@
+{
+  "name": "moduler-v5-and-dev-toolkit-starter",
+  "version": "1.0.0",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "dev": "node dev/loop.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "allnulled",
+  "license": "WTFPL",
+  "description": "",
+  "devDependencies": {
+    "chokidar": "^5.0.0",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "js-beautify": "^1.15.4",
+    "picomatch": "^4.0.4",
+    "socket.io": "^4.8.3"
+  }
+}

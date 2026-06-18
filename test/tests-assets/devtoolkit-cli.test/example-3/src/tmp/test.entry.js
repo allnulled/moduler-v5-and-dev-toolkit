@@ -1,0 +1,1 @@
+module.exports = () => /*<$=await include("./test2.js")$>*/;

@@ -11,6 +11,7 @@
  * @sets this.events:DevToolkit.Events - Utilidades para eventos de la escucha a cambios en ficheros
  * @sets this.semaphore:DevToolkit.Semaphore - Utilidades para semáforos. Presupone el fichero `semaphore.dev-toolkit.txt` para la gestión del semáforo.
  * @sets this.assert:DevToolkit.Assert - Utilidades para aserciones
+ * @sets this.moduler:ModulerV5 - Una instancia de ModulerV5. Se utiliza para poder compilar el CSS. La API de modulación de JavaScript queda sin usarse dentro de DevToolkit, pero se importa porque la modulación CSS exige esa API igualmente.
  * @description En la construcción de DevToolkit se establecen las propiedades. En general, lo que consigues creando estas instancias es facilitar que los métodos de ellas conozcan la ruta raíz del proyecto, y así no tener que estar combinándolas con `DevToolkit.prototype.fullpathOf` manualmente en cada caso.
  */
 constructor(basedir = process.cwd()) {
@@ -23,4 +24,5 @@ constructor(basedir = process.cwd()) {
   this.events = new this.constructor.Events(this);
   this.semaphore = new this.constructor.Semaphore(this, "semaphore.dev-toolkit.txt");
   this.assert = this.constructor.Testing.Asserter.createAssert().assert;
+  this.moduler = this.constructor.Moduler.create(this.basedir);
 }
