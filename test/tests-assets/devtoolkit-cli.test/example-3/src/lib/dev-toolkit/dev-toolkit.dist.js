@@ -216,6 +216,9 @@
             "node_modules",
             ...(typeof options.ignore === "undefined" ? [] : options.ignore),
           ],
+        }).then(list => {
+          // 4. Sort results:
+          return list.sort(...options.sort ? [options.sort] : [])
         });
       }
       /**
@@ -293,16 +296,19 @@
       /**
        * @name DevToolkit.Documentator.prototype.extractJavadocTextFromDirectory
        * @type class method
-       * @parameter dir:String - Directorio del cual se quieren extraer los comentarios javadoc.
-       * @parameter options:Object - Opciones. Actualmente no tiene uso. Por defecto, un objeto vacío.
+       * @parameter dir:String|null = this.toolkit.basedir - Directorio del cual se quieren extraer los comentarios javadoc. En caso de null se usa el de por defecto normal, this.toolkit.basedir.
+       * @parameter options:Object - Opciones. 
+       * @parameter - options.header:String|undefined - Texto de cabecera.
+       * @parameter - options.tableOfContents:true|false|undefined - Genera la tabla de contenidos en `true`.
+       * @parameter - options.footer:String|undefined - Texto de pie de documento.
        * @returns `Promise<String>` - Texto compuesto por todos los comentarios javadoc encontrados.
        * @description Devuelve el texto de todos los comentarios javadoc encontrador bajo un directorio. Utiliza `this.extractJavadocCommentsFromDirectory` por dentro.
        */
       async extractJavadocTextFromDirectory(dir = this.toolkit.basedir, options = {}) {
-        const allJavadocCommentsPerFile = await this.extractJavadocCommentsFromDirectory(dir);
+        const allJavadocCommentsPerFile = await this.extractJavadocCommentsFromDirectory(dir ?? this.toolkit.basedir);
         let outputMd = "";
         for (let file in allJavadocCommentsPerFile) {
-          outputMd += `----\n\n**${file}**\n\n`;
+          outputMd += `\n\n### ${file}\n\n`;
           const commentsInFile = allJavadocCommentsPerFile[file];
           for (let indexComment = 0; indexComment < commentsInFile.length; indexComment++) {
             outputMd += `----\n\n`;
@@ -324,7 +330,49 @@
             }
           }
         }
+        outputMd = (() => {
+          let doc = ``;
+          if (options.header) {
+            doc += `${options.header}`;
+            doc += `\n\n`;
+          }
+          if (options.tableOfContents) {
+            doc += this.generateMarkdownTableOfContents(doc);
+          }
+          doc += outputMd;
+          if (options.footer) {
+            doc += `${options.footer}`;
+            doc += `\n\n`;
+          }
+          return doc;
+        })();
         return outputMd;
+      }
+      /**
+       * @name DevToolkit.Documentator.prototype.generateMarkdownTableOfContents
+       * @type class method
+       * @parameter md:String - Código en markdown
+       * @parameter autoinjectInto:String|false|undefined="{{ Table Of Contents }} - String donde se tiene que autoinyectar la tabla en el primer parámetro md:String.
+       * @returns `Promise<String>` - El contenido inicial con la tabla de contenidos inyectada, de haberla, o el contenido de la tabla de contenidos directamente en su defecto.
+       * @description Genera una tabla de contenidos y se autoinyecta en el documento inicial si puede, o la devuelve directamente si no.
+       */
+      generateMarkdownTableOfContents(md, autoinjectInto = "{{ Table Of Contents }}") {
+        let toc = "";
+        for (const [, hashes, title] of md.matchAll(/^(#{1,6})\s+(.+)$/gm)) {
+          toc += `\n${"   ".repeat(hashes.length-1)}- [${title}](#${
+      title
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '') 
+      .replace(/[^\w\s-]/g, '')        
+      .replace(/\s+/g, '-')            
+      .replace(/-+/g, '-')
+    })`;
+        }
+        if (autoinjectInto && md.includes(autoinjectInto)) {
+          toc = md.replace(autoinjectInto, toc);
+        }
+        return toc;
       }
     }
     /**
@@ -451,8 +499,11 @@
          * @name DevToolkit.CommandLine.prototype.buildDocs
          * @not-finished
          */
-        buildDocs() {
-
+        async buildDocs(dir, options = {}) {
+          const txt = await this.toolkit.documentator.extractJavadocTextFromDirectory(dir, options);
+          return {
+            markdown: txt
+          };
         }
         /**
          * @name DevToolkit.CommandLine.Tools.prototype.buildCss

@@ -10,4 +10,5 @@ static Documentator = class Documentator {
   /*<$=await include("./prototype._extractJavadocCommentsFromString.js")$>*/
   /*<$=await include("./prototype.extractJavadocCommentsFromDirectory.js")$>*/
   /*<$=await include("./prototype.extractJavadocTextFromDirectory.js")$>*/
+  /*<$=await include("./prototype.generateMarkdownTableOfContents.js")$>*/
 }

@@ -20,5 +20,8 @@ _findFiles(globPattern = "**/*.js", options = {}) {
       "node_modules",
       ...(typeof options.ignore === "undefined" ? [] : options.ignore),
     ],
+  }).then(list => {
+    // 4. Sort results:
+    return list.sort(...options.sort ? [options.sort] : [])
   });
 }

@@ -50,9 +50,9 @@ module.exports = async function (...args) {
   // DevToolkit.Debug.die(docsJson, expectedJson);
   assertDeepEqual(docsJson, expectedJson, "can extract javadoc comments as expected");
   const docsText = await devToolkit2.documentator.extractJavadocTextFromDirectory();
-  const expectedText = `----
+  const expectedText = `
 
-**{@root}/documentable-1.js**
+### {@root}/documentable-1.js
 
 ----
 
@@ -81,4 +81,12 @@ module.exports = async function (...args) {
 `;
   assert(docsText === expectedText, "can extract markdown as expected");
   await require("fs").promises.writeFile(`${__dirname}/tests-assets/devtoolkit-documentator.test/documented-1.md`, docsText, "utf8");
+
+  Table_of_contents_from_string: {
+    const tocText = await devToolkit2.documentator.generateMarkdownTableOfContents("# Title\n\n## Index\n\n{{ Table Of Contents }}\n\n## Subtitle\n\n### Subsubtitle\n\nSomething here.");
+    assert(tocText.includes("\n- [Title](#title)"), "can extract titles with table of contents from string as expected (point 1)");
+    assert(tocText.includes("\n   - [Subtitle](#subtitle)"), "can extract titles with table of contents from string as expected (point 2)");
+    assert(tocText.includes("\n      - [Subsubtitle](#subsubtitle)"), "can extract titles with table of contents from string as expected (point 3)");
+  }
+  
 };

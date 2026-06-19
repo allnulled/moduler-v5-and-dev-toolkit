@@ -1,55 +1,50 @@
 # moduler-v5-and-dev-toolkit
 
-ModulerV5 es un modulador en runtime de JS y DevToolkit es un kit de herramientas de desarrollo para JS.
+ModulerV5 es un modulador en runtime de JS/CSS y DevToolkit es un kit de herramientas de desarrollo para JS.
 
 ## Índice
 
-- [moduler-v5-and-dev-toolkit](#moduler-v5-and-dev-toolkit)
-  - [Índice](#índice)
-  - [Estado](#estado)
-  - [Composición](#composición)
-  - [Especificaciones](#especificaciones)
-    - [Partes más críticas](#partes-más-críticas)
-  - [Dominios de ModulerV5 y DevToolkit](#dominios-de-modulerv5-y-devtoolkit)
-  - [Motivación](#motivación)
-  - [API](#api)
-  - [Conclusión](#conclusión)
-
+{{ Table Of Contents }}
 
 ## Estado
 
 ⚠️ En construcción.
 
-## Composición
+## Ejemplos de uso
+
+⚠️ En proceso.
+
+## Composición general
 
 - La API, en general, son clases e instancias de clase anidadas.
-- DevToolkit es un superconjunto de ModulerV5
-   - O ModulerV5 es un subconjunto de DevToolkit
-   - Quiere decir que si importar DevToolkit ya importas ModulerV5 automáticamente
-   - Esto se hace así porque:
-      - DevToolkit es código para el compilation-time
-         - Tiene todo lo necesario para la modulación/compilación en el compilation-time
-         - Principalmente, se incluyó a ModulerV5 para poder compilar el CSS en el compilation-time
-            - Pero el CssModuler requiere de ModulerV5
-            - Así que al final, he decidido incluir todo el ModulerV5 en el DevToolkit y ya está
-      - ModulerV5 es código para el run-time
-         - Se encarga de la modulación del JS y el CSS en run-time
-         - Tiene lo mínimo necesario para la modulación en el run-time
-         - Se separa de DevToolkit para contaminar lo menos posible el run-time
+- `DevToolkit` y `ModulerV5` son las globales principales que se sobreescriben
+- `DevToolkit.Moduler` es `ModulerV5` embedido, porque:
+   - DevToolkit es código para el compilation-time
+      - Tiene todo lo necesario para la modulación/compilación en el compilation-time
+      - Principalmente, se incluyó a ModulerV5 para poder compilar el CSS en el compilation-time
+         - Pero el CssModuler requiere de ModulerV5
+         - Así que al final, he decidido incluir todo el ModulerV5 en el DevToolkit y ya está
+   - ModulerV5 es código para el run-time
+      - Se encarga de la modulación del JS y el CSS en run-time
+      - Tiene lo mínimo necesario para la modulación en el run-time
+      - Se separa de DevToolkit para contaminar lo menos posible el run-time
 
-## Especificaciones
+### Ficheros, hooks globales y librerías de terceros embedidas
 
-⚠️ En construcción.
+Los ficheros son:
 
-### Partes más críticas
+- `dist/moduler-v5/moduler-v5.dist.js`
+- `dist/dev-toolkit/dev-toolkit.dist.js` 
+   - recuerda que `DevToolkit.Moduler` es la clase `ModulerV5` embedida
 
-Los puntos donde la API se puede complicar un poco más son estos:
+Estos los hooks globales que se escriben en `window` y `global` separados:
 
 - `ModulerV5` (clase)
    - `ModulerV5.Dictionary` (instancia global de `ModulerV5`)
    - `ModulerV5.CssModuler` (clase)
       - `ModulerV5.css` (instancia global de `CssModuler`)
 - `DevToolkit` (clase)
+   - `DevToolkit.Moduler`: es la clase `ModulerV5`
    - `DevToolkit.FileWatcher.Refrescador`:
       - [https://github.com/allnulled/refrescador](https://github.com/allnulled/refrescador)
       - `chokidar: ^5.0.0`
@@ -60,7 +55,7 @@ Los puntos donde la API se puede complicar un poco más son estos:
    - `DevToolkit.Templating.Tjs`:
       - [https://github.com/allnulled/templated-js](https://github.com/allnulled/templated-js)
          - tiene algún hack añadido, en `include` e `includeSync`, que puede no reflejarse en el proyecto original
-      - `js-beautify: ^1.15.4`
+      - `js-beautify: ^1.15.4` es opcional pero recomendable
 
 ## Dominios de ModulerV5 y DevToolkit
 
@@ -98,9 +93,9 @@ En cambio:
 
 A continuación se expone toda la API documentada de tanto `DevToolkit` como de `ModulerV5`.
 
-{{ API aquí }}
+{{ API }}
 
-## Conclusión
+## Reflexión
 
 La modulación en JavaScript desde la industria actual:
 

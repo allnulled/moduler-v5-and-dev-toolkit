@@ -27,10 +27,13 @@ const main = async function() {
   El_documenter: {
     const DevToolkit = require(__dirname + "/../dist/dev-toolkit/dev-toolkit.dist.js");
     const devToolkit = DevToolkit.create(__dirname + "/../src");
-    const documentationInText = await devToolkit.documentator.extractJavadocTextFromDirectory();
+    const documentationInText = await devToolkit.documentator.extractJavadocTextFromDirectory(null);
+    // No te interesa bloquear la ejecución aquí
     require("fs").promises.writeFile(`${__dirname}/../API.md`, documentationInText, "utf8");
+    // No te interesa bloquear la ejecución aquí tampoco
     require("fs").promises.readFile(`${__dirname}/../README.tpl.md`, "utf8").then(readmeTplContent => {
-      const readmeContent = readmeTplContent.replace("{{ API aquí }}", documentationInText);
+      let readmeContent = readmeTplContent.replace("{{ API }}", documentationInText);
+      readmeContent = devToolkit.documentator.generateMarkdownTableOfContents(readmeContent);
       require("fs").promises.writeFile(`${__dirname}/../README.md`, readmeContent, "utf8");
     });
   }

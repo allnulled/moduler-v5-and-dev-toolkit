@@ -74,7 +74,11 @@ module.exports = async function (...args) {
     assertFileMissing(`${targetDirectory}/src/tmp/test.css`, "Can prepare cli tool method test (point 1.3)");
     assertFileMissing(`${targetDirectory}/src/tmp/test2.css`, "Can prepare cli tool method test (point 1.4)");
     await DevToolkit.FileSystem.writeDirectory(`${targetDirectory}/src/tmp`);
-    await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.entry.js`, `module.exports = () => /*${''}<$=await include("./test2.js")$>${''}*/;`);
+    await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.entry.js`, `/**
+ * @name random function 1
+ * @description Un ejemplo para la documentación
+ */
+module.exports = () => /*${''}<$=await include("./test2.js")$>${''}*/;`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test2.js`, `500`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test.entry.css`, `/*${''}@requires:./test2.css${''}*/`);
     await DevToolkit.FileSystem.writeFile(`${targetDirectory}/src/tmp/test2.css`, `html{background:black}`);
@@ -116,7 +120,13 @@ html{background:black}\n
     // 3. Comprobar que buildDocs funciona como se espera
     Testear_buildDocs: {
       const targetDocumentableDir = `${targetDirectory}/src/tmp`;
-      await devToolkit3.cli.tools.buildDocs(targetDocumentableDir);
+      const {markdown:docs} = await devToolkit3.cli.tools.buildDocs(targetDocumentableDir, {
+        header: "# API del proyecto\n\nEsto es la documentación del código del proyecto.\n\nÍndice\n\n",
+        tableOfContents: true,
+        footer: "## Más información\n\nPara más información, puedes explorar el código fuente."
+      });
+      assert(typeof docs === "string", "Can build docs and return final markdown");
+      assert(docs.includes("Un ejemplo para la documentación"), "Can build docs and return expected markdown");
       // @TODO: el test del método
       // @TODO: el test del método
       // @TODO: el test del método
