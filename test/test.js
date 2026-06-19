@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const tests = [];
 
-const all = 1;
+const all = 0;
 //////////////////////////////////////////////////////////////////
 if(0 || all) tests.push(`${__dirname}/moduler-v5.signatures.test.js`);
 if(0 || all) tests.push(`${__dirname}/moduler-v5.paths.test.js`);
@@ -16,8 +16,9 @@ if(0 || all) tests.push(`${__dirname}/dev-toolkit.tracer.test.js`);
 if(0 || all) tests.push(`${__dirname}/dev-toolkit.semaphores.test.js`);
 if(0 || all) tests.push(`${__dirname}/dev-toolkit.events.test.js`);
 if(0 || all) tests.push(`${__dirname}/dev-toolkit.file-watcher.test.js`);
-if(1 || all) tests.push(`${__dirname}/dev-toolkit.cli-tools.test.js`);
-if(1 || all) tests.push(`${__dirname}/dev-toolkit.cli-api.test.js`);
+if(0 || all) tests.push(`${__dirname}/dev-toolkit.cli-tools.test.js`);
+if(0 || all) tests.push(`${__dirname}/dev-toolkit.cli-api.test.js`);
+if(1 || all) tests.push(`${__dirname}/dev-toolkit.readme-examples.test.js`);
 //////////////////////////////////////////////////////////////////
 
 

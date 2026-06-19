@@ -5,3 +5,4 @@
  * @description Utiliza los parámetros por defecto. Por lo cual, es instancia original, no clonada.
  */
 ModulerV5.Dictionary = new ModulerV5();
+ModulerV5.Dictionary.css = ModulerV5.css;
