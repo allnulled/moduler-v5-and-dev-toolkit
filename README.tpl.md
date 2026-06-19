@@ -29,7 +29,7 @@ ModulerV5 es un modulador en runtime de JS/CSS y DevToolkit es un kit de herrami
       - Tiene lo mínimo necesario para la modulación en el run-time
       - Se separa de DevToolkit para contaminar lo menos posible el run-time
 
-### Ficheros, hooks globales y librerías de terceros embedidas
+## Ficheros, hooks globales y librerías de terceros embedidas
 
 Los ficheros son:
 
