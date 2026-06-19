@@ -2,7 +2,7 @@ const Tjs = require(`${__dirname}/../dist/dev-toolkit/tjs.js`);
 const fs = require("fs");
 require("js-beautify/js");
 
-const main = async function() {
+const main = async function () {
   El_building: {
     const tjs = Tjs.create(`${__dirname}/..`, {
       createFileIfNotExists: true,
@@ -11,10 +11,10 @@ const main = async function() {
       ["src/ModulerV5/ModulerV5.entry.js", "dist/moduler-v5/moduler-v5.dist.js"],
       ["src/DevToolkit/DevToolkit.entry.js", "dist/dev-toolkit/dev-toolkit.dist.js"],
     ];
-    for(let index=0; index<targets.length; index++) {
+    for (let index = 0; index < targets.length; index++) {
       const [src, dst] = targets[index];
       const moduleSource = await tjs.renderFile(src, {}, {
-        beautify:{
+        beautify: {
           indent_size: 2
         }
       });
@@ -27,14 +27,18 @@ const main = async function() {
   El_documenter: {
     const DevToolkit = require(__dirname + "/../dist/dev-toolkit/dev-toolkit.dist.js");
     const devToolkit = DevToolkit.create(__dirname + "/../src");
-    const documentationInText = await devToolkit.documentator.extractJavadocTextFromDirectory(null);
-    // No te interesa bloquear la ejecución aquí
-    require("fs").promises.writeFile(`${__dirname}/../API.md`, documentationInText, "utf8");
-    // No te interesa bloquear la ejecución aquí tampoco
-    require("fs").promises.readFile(`${__dirname}/../README.tpl.md`, "utf8").then(readmeTplContent => {
-      let readmeContent = readmeTplContent.replace("{{ API }}", documentationInText);
-      readmeContent = devToolkit.documentator.generateMarkdownTableOfContents(readmeContent);
-      require("fs").promises.writeFile(`${__dirname}/../README.md`, readmeContent, "utf8");
+    devToolkit.documentator.extractJavadocTextFromDirectory(null).then(documentationInText => {
+      // No te interesa bloquear la ejecución aquí
+      require("fs").promises.writeFile(`${__dirname}/../API.md`, documentationInText, "utf8");
+      // No te interesa bloquear la ejecución aquí tampoco
+      Promise.all([
+        require("fs").promises.readFile(`${__dirname}/../EXAMPLES.md`, "utf8"),
+        require("fs").promises.readFile(`${__dirname}/../README.tpl.md`, "utf8"),
+      ]).then(([examplesContent, readmeTplContent]) => {
+        let readmeContent = readmeTplContent.replace("{{ API }}", documentationInText).replace("{{ EXAMPLES }}", examplesContent);
+        readmeContent = devToolkit.documentator.generateMarkdownTableOfContents(readmeContent);
+        require("fs").promises.writeFile(`${__dirname}/../README.md`, readmeContent, "utf8");
+      });
     });
   }
   El_exporting: {
